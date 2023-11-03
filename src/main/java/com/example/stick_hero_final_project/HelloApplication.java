@@ -12,8 +12,15 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        stage.setTitle("Stick Hero Ninja !!!");
         stage.setScene(scene);
+        stage.setResizable(true);
+        stage.setOnCloseRequest(event -> {
+            // Perform actions when the user attempts to close the window
+            System.out.println("Closing the application...");
+            // You can add your custom close logic here
+        });
+//        stage.lo
         stage.show();
     }
 

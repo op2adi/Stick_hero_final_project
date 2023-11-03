@@ -16,7 +16,7 @@ public class HelloApplication extends Application {
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setOnCloseRequest(event -> {
-            // Perform actions when the user attempts to close the window
+            // Perform actions when the user attempts to close the window will cork when press red cross buttomn although not needed
             System.out.println("Closing the application...");
             // You can add your custom close logic here
         });

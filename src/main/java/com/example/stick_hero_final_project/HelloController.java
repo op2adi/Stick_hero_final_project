@@ -27,19 +27,8 @@ public class HelloController {
 
         // Close the current stage
         stage.close();
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
-        Parent root = loader.load();
-
-        // Create a new stage
-        Stage newStage = new Stage();
-        newStage.setTitle("New Scene"); // Set the title of the new window
-
-        // Set up the scene with the loaded FXML content
-        Scene newScene = new Scene(root);
-        newStage.setScene(newScene);
-        // Show the new stage
-        newStage.show();
+        stck_hero p = new stck_hero();
+        p.opdil();
     }
 
 }

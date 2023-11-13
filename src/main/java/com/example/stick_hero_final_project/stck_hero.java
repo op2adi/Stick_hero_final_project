@@ -9,12 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Random;
 
-public class stck_hero extends HelloApplication {
+public class stck_hero extends background {
     private Player_create player;
     private static final int height = 800;
     private static final int width = 800;
@@ -44,8 +45,34 @@ public class stck_hero extends HelloApplication {
         // Set up the scene with the loaded FXML content
         Scene newScene = new Scene(root);
         newStage.setScene(newScene);
-        ((Pane) root).getChildren().add(player.getNode());
+        String srt = getRandomImage();
+        Image backgroundImage = new Image(srt);
+        ImageView backgroundImageView = new ImageView(backgroundImage);
+        System.out.println(srt);
+        newStage.setWidth(600);
+        newStage.setHeight(800);
+        newStage.setMaxWidth(600);
+        newStage.setMaxHeight(730);
+
+// Create a BackgroundImage
+        BackgroundImage background = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT
+        );
+
+// Create a Background with the BackgroundImage
+        Background backgroundWithImage = new Background(background);
+
+// Set the background for the Pane
+        backgroundImageView.setFitWidth(600);
+        backgroundImageView.setFitHeight(700);
+        ((Pane) root).getChildren().add(backgroundImageView);
+//        initialize1((Pane) root);
         // Show the new stage
+        ((Pane) root).getChildren().add(player.getNode());
         newStage.show();
     }
 
@@ -55,5 +82,25 @@ public class stck_hero extends HelloApplication {
 
     public Player_create cr_pl(){
         return (new Player_create(0,0,0,0));
+    }
+
+    public void initialize1(Pane mainPane) {
+        // Set the background image
+        Image backgroundImage = new Image(getRandomImage());
+        BackgroundImage background = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                BackgroundSize.DEFAULT
+        );
+
+        mainPane.setBackground(new Background(background));
+    }
+
+    private String getRandomImage() {
+        Random random = new Random();
+        int index = random.nextInt(getBackgroundImages().size());
+        return getBackgroundImages().get(index);
     }
 }

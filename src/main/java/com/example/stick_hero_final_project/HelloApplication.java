@@ -20,6 +20,10 @@ public class HelloApplication extends Application {
             System.out.println("Closing the application...");
             // You can add your custom close logic here
         });
+        stage.setWidth(600);
+        stage.setHeight(800);
+        stage.setMaxWidth(600);
+        stage.setMaxHeight(730);
 //        stage.lo
         stage.show();
     }

@@ -7,7 +7,7 @@ public class background{
     private static final List<String> backgroundImages = Arrays.asList(
             "file:/D:/Stick_Hero_Final_Project/src/main/java/com/example/stick_hero_final_project/Images/back1.jpeg",
             "file:/D:/Stick_Hero_Final_Project/src/main/java/com/example/stick_hero_final_project/Images/back2.jpeg",
-            "file:/D:/Stick_Hero_Final_Project/src/main/java/com/example/stick_hero_final_project/Images/bac3.jpeg"
+            "file:/D:/Stick_Hero_Final_Project/src/main/java/com/example/stick_hero_final_project/Images/back3.jpeg"
     );
 
     public List<String> getBackgroundImages() {

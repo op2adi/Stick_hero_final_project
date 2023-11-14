@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -73,6 +74,10 @@ public class stck_hero extends background {
 //        initialize1((Pane) root);
         // Show the new stage
         ((Pane) root).getChildren().add(player.getNode());
+        player.getNode().setX(0);
+        player.getNode().setY(500);
+
+
         newStage.show();
     }
 
@@ -102,5 +107,13 @@ public class stck_hero extends background {
         Random random = new Random();
         int index = random.nextInt(getBackgroundImages().size());
         return getBackgroundImages().get(index);
+    }
+    @FXML
+    private void onMouseDragged(MouseEvent event) {
+        double xCoordinate = event.getX();
+        double yCoordinate = event.getY();
+        System.out.println("Mouse dragged at coordinates: (" + xCoordinate + ", " + yCoordinate + ")");
+
+        // You can perform any action or logic based on these coordinates here
     }
 }

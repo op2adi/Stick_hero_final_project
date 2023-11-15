@@ -11,6 +11,18 @@ public class stick {
     private double width;
     private boolean falling = false;
 
+    public void setStick(Rectangle stick) {
+        this.stick = stick;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
     // constructor
     public stick(double x, double y, double width, double length) {
         // Initialize the stick with width and length

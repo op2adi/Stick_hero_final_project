@@ -1,5 +1,7 @@
 package com.example.stick_hero_final_project;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,14 +11,16 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.util.Random;
 
-public class stck_hero extends background {
+public class stck_hero extends background implements score_interface,cherries,points_interface  {
     private Player_create player;
     private static final int height = 800;
     private static final int width = 800;
@@ -26,6 +30,7 @@ public class stck_hero extends background {
     private int  pillar_length = 100;
     private int getPillar_width = 30;
     private int cherries=0;
+    private boolean keyIsPressed = false;
 
     @FXML
     private Label welcomeText;
@@ -76,12 +81,42 @@ public class stck_hero extends background {
         ((Pane) root).getChildren().add(player.getNode());
         player.getNode().setX(0);
         player.getNode().setY(500);
+        newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+            keyIsPressed = false;
+        });
 
+        newScene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            keyIsPressed = true;
+            double x = event.getSceneX();
+            double y = event.getSceneY();
 
+            stick s = new stick(10, 10, 10, 10);
+            ((Pane) root).getChildren().add(s.getStick());
+
+            s.getStick().setLayoutX(player.getNode().getX() + 30);
+            s.getStick().setLayoutY(player.getNode().getY() + 30);
+
+            Timeline timeline = new Timeline( //thoda pdhna padega timeline ke baare me
+                    new KeyFrame(Duration.millis(100), e -> {
+                        if (keyIsPressed) {
+                            s.getStick().setLayoutY(s.getStick().getLayoutY() - 10);
+                            s.getStick().setHeight(s.getStick().getHeight() + 10);
+//                            System.out.println("HI"); Debug statement
+                        }
+                    })
+            );
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+        });
+
+        newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+            keyIsPressed = false;
+        });
         newStage.show();
     }
 
-    public Node cr_pl_get_nd(){
+
+        public Node cr_pl_get_nd(){
         return (new Player_create(0,0,0,0)).getNode();
     }
 
@@ -115,5 +150,60 @@ public class stck_hero extends background {
         System.out.println("Mouse dragged at coordinates: (" + xCoordinate + ", " + yCoordinate + ")");
 
         // You can perform any action or logic based on these coordinates here
+    }
+
+    @Override
+    public void viewscore() {
+
+    }
+
+    @Override
+    public void setscore() {
+
+    }
+
+    @Override
+    public void increase_score() {
+
+    }
+
+    @Override
+    public void set_cherries() {
+
+    }
+
+    @Override
+    public void inc_cherries() {
+
+    }
+
+    @Override
+    public void view_cherries() {
+
+    }
+
+    @Override
+    public void relive_cherries() {
+
+    }
+
+    @Override
+    public void display() {
+
+    }
+
+    @Override
+    public void set_score() {
+
+    }
+
+    @Override
+    public void increment() {
+
+    }
+
+    @Override
+    public void perfect_increment() {
+
     }
 }

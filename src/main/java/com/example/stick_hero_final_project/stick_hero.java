@@ -2,7 +2,6 @@ package com.example.stick_hero_final_project;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -11,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
@@ -20,7 +18,9 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.util.Random;
 
-public class stck_hero extends background implements score_interface,cherries,points_interface  {
+import static java.lang.Thread.sleep;
+
+public class stick_hero extends background implements score_interface,cherries,points{
     private Player_create player;
     private static final int height = 800;
     private static final int width = 800;
@@ -32,6 +32,7 @@ public class stck_hero extends background implements score_interface,cherries,po
     private int cherries=0;
     private boolean keyIsPressed = false;
 
+    private boolean click_flag = true; // will make it True once key is pressed
     @FXML
     private Label welcomeText;
 
@@ -41,7 +42,7 @@ public class stck_hero extends background implements score_interface,cherries,po
     }
 
 
-    public void opdil() throws IOException {
+    public void init() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
         Parent root = loader.load();
         player = cr_pl();
@@ -81,6 +82,8 @@ public class stck_hero extends background implements score_interface,cherries,po
         ((Pane) root).getChildren().add(player.getNode());
         player.getNode().setX(0);
         player.getNode().setY(500);
+
+
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             keyIsPressed = false;
         });
@@ -90,17 +93,17 @@ public class stck_hero extends background implements score_interface,cherries,po
             double x = event.getSceneX();
             double y = event.getSceneY();
 
-            stick s = new stick(10, 10, 10, 10);
+            stick s = new stick(10, 10, 5, 0);
             ((Pane) root).getChildren().add(s.getStick());
 
-            s.getStick().setLayoutX(player.getNode().getX() + 30);
+            s.getStick().setLayoutX(player.getNode().getX() + 40);
             s.getStick().setLayoutY(player.getNode().getY() + 30);
 
             Timeline timeline = new Timeline( //thoda pdhna padega timeline ke baare me
                     new KeyFrame(Duration.millis(100), e -> {
-                        if (keyIsPressed) {
-                            s.getStick().setLayoutY(s.getStick().getLayoutY() - 10);
-                            s.getStick().setHeight(s.getStick().getHeight() + 10);
+                        if (keyIsPressed && click_flag==true) {
+                            s.extend(10);
+
 //                            System.out.println("HI"); Debug statement
                         }
                     })
@@ -111,6 +114,7 @@ public class stck_hero extends background implements score_interface,cherries,po
 
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             keyIsPressed = false;
+            click_flag=false;
         });
         newStage.show();
     }
@@ -183,10 +187,9 @@ public class stck_hero extends background implements score_interface,cherries,po
     }
 
     @Override
-    public void relive_cherries() {
+    public void revive_cherries() {
 
     }
-
     @Override
     public void display() {
 

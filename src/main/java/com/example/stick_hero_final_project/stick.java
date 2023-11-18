@@ -55,9 +55,9 @@ public class stick {
 
     public void extend(double amount) {
         // Increase the length of the stick and adjust the position
-        length += amount;
-        stick.setHeight(length);
-        stick.setLayoutY(stick.getLayoutY() - amount);  // Move the stick upward
+
+        stick.setLayoutY(stick.getLayoutY() - amount);
+        stick.setHeight(stick.getHeight() + amount);
     }
 
     public void reset() {

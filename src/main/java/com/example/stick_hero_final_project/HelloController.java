@@ -35,8 +35,8 @@ public class HelloController {
         }
         // Close the current stage
         stage.close();
-        stck_hero p = new stck_hero();
-        p.opdil();
+        stick_hero p = new stick_hero();
+        p.init();
     }
 
     public void closebutton(){

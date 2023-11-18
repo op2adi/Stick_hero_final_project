@@ -14,13 +14,38 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+
 
 import static java.lang.Thread.sleep;
 
 public class stick_hero extends background implements score_interface,cherries,points{
+    private String start_of_game_sound= "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\Start_of_Game.mp4";
+
+    public String getStart_of_game() {
+        return start_of_game_sound;
+    }
+
+    public void setStart_of_game(String start_of_game_sound) {
+        this.start_of_game_sound = start_of_game_sound;
+    }
+
+    public Media getSound() {
+        return sound;
+    }
+
+    public void setSound(Media sound) {
+        this.sound = sound;
+    }
+
+    private Media sound = new Media(new File(start_of_game_sound).toURI().toString());
+
     private Player_create player;
     private final int height = 80;
 
@@ -108,6 +133,10 @@ public class stick_hero extends background implements score_interface,cherries,p
         this.welcomeText = welcomeText;
     }
 
+    public void start_song(){
+        MediaPlayer mediaPlayer = new MediaPlayer(this.getSound());
+        mediaPlayer.play();
+    }
     public stick_hero(Player_create player, int speed, int score, int pillar_length, int getPillar_width, int cherries, boolean keyIsPressed, boolean click_flag, Label welcomeText) {
         this.player = null;
         this.speed = speed;
@@ -236,11 +265,11 @@ public class stick_hero extends background implements score_interface,cherries,p
         //Yha pr pillar ko dalna hai
         Random random = new Random();
         int width = Math.abs(random.nextInt()) % 100 + 100;
-        int height = Math.abs(random.nextInt()) % 300 + 100;
+        int height = 100;
         int distance = Math.abs(random.nextInt()) % 400 + 100;
 
         createRandomPillar((Pane) root);
-
+        start_song();
         newStage.show();
     }
 

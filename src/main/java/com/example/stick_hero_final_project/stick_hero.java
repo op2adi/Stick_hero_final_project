@@ -32,6 +32,8 @@ public class stick_hero extends background implements score_interface,cherries,p
         return start_of_game_sound;
     }
 
+    stick s = new stick(10, 10, 5, 0);
+
     public void setStart_of_game(String start_of_game_sound) {
         this.start_of_game_sound = start_of_game_sound;
     }
@@ -234,15 +236,20 @@ public class stick_hero extends background implements score_interface,cherries,p
 
 
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-            keyIsPressed = false;
+//            keyIsPressed = false;
+//            for (int i=0;i<((Pane) root).getChildren().size();i++){
+//                if (((Pane) root).getChildren().get(i).equals(s))
+//            }
+
         });
 
         newScene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
             keyIsPressed = true;
             double x = event.getSceneX();
             double y = event.getSceneY();
-
-            stick s = new stick(10, 10, 5, 0);
+            if (((Pane)root).getChildren().contains(s.getStick())) {
+                boolean remove = ((Pane) root).getChildren().remove(s.getStick());
+            }
             ((Pane) root).getChildren().add(s.getStick());
 
             s.getStick().setLayoutX(player.getNode().getX() + 40);
@@ -264,6 +271,10 @@ public class stick_hero extends background implements score_interface,cherries,p
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             keyIsPressed = false;
             click_flag=false;
+//            int test = 0; // using condition variables
+//            test = s.falHorizontally(s,player,ahead_pillar);
+//            while (test==0){click_flag=false;};//reready to take input
+//            click_flag = true;
         });
 
         //Yha pr pillar ko dalna hai

@@ -1,0 +1,7 @@
+package com.example.stick_hero_final_project;
+
+public class stick_hero_run{
+    public void run(Player_create player){
+        //Implement to make player walk om=n stick to cross
+    }
+}

@@ -1,7 +1,10 @@
 package com.example.stick_hero_final_project;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class stick {
 
@@ -64,6 +67,27 @@ public class stick {
         // Reset the length of the stick
         length = 0;
         stick.setHeight(length);
+    }
+    public int falHorizontally(stick stick,Player_create Player,Pillar pillar){//player for getting values
+//        stick.getStick().setLayoutX(Player.getNode().getX()+40);
+//        stick.getStick().setLayoutY(Player.getNode().getY()+30);
+        double total = 2*stick.getLength(); // jb stick giregi to double hojayega
+        Duration timeset = Duration.seconds(2+ 3*(stick.length)%3); //kitna time lagega usko girne me
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, event -> {
+                    // Start position
+                }),
+                new KeyFrame(timeset, event -> {
+                    // End position after the duration
+                    stick.getStick().setLayoutX(Player.getNode().getLayoutY()+total);
+                })
+        );
+
+        // Configure the timeline
+        timeline.setCycleCount(1); // Play once
+        timeline.play();
+        return 1;
+
     }
 /*
     public void fallHorizontally(double targetX) {

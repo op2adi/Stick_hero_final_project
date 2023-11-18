@@ -1,5 +1,6 @@
 package com.example.stick_hero_final_project;
 
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -24,5 +25,9 @@ public class Pillar {
 
     public void moveLeft(double distance) {
         pillar.setLayoutX(pillar.getLayoutX() - distance);
+    }
+
+    public Node getNode() {
+        return this.pillar;
     }
 }

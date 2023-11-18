@@ -124,6 +124,25 @@ public class stick_hero extends background implements score_interface,cherries,p
     private final int stick_hero_height = 50;
     private int speed = 1;
     private int score = 0;
+    private Pillar current_pillar;
+    private Pillar ahead_pillar;
+
+    public Pillar getCurrent_pillar() {
+        return current_pillar;
+    }
+
+    public void setCurrent_pillar(Pillar current_pillar) {
+        this.current_pillar = current_pillar;
+    }
+
+    public Pillar getAhead_pillar() {
+        return ahead_pillar;
+    }
+
+    public void setAhead_pillar(Pillar ahead_pillar) {
+        this.ahead_pillar = ahead_pillar;
+    }
+
     private int  pillar_length = 100;
     private int getPillar_width = 30;
     private int cherries=0;
@@ -213,10 +232,41 @@ public class stick_hero extends background implements score_interface,cherries,p
             keyIsPressed = false;
             click_flag=false;
         });
+
+        //Yha pr pillar ko dalna hai
+        Random random = new Random();
+        int width = Math.abs(random.nextInt()) % 100 + 100;
+        int height = Math.abs(random.nextInt()) % 300 + 100;
+        int distance = Math.abs(random.nextInt()) % 400 + 100;
+
+        createRandomPillar((Pane) root);
+
         newStage.show();
     }
 
+    private void createRandomPillar(Pane root) {
+        try {
 
+            Random random = new Random();
+            int width = Math.abs(random.nextInt()) % 100 + 30;
+            int height = Math.abs(random.nextInt()) % 300 + 30;
+
+            ahead_pillar = new Pillar(400, 400, width, height);
+            int distance = Math.abs(random.nextInt()) % 400 + 100;
+
+            // Set pillar position at a random distance
+            ahead_pillar.getNode().setLayoutX(distance);
+
+            // Add the pillar to the root pane
+            ((Pane) root).getChildren().add(ahead_pillar.getNode());
+            return;
+        }
+        catch (Exception e){
+            System.out.println("HI");
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    }
         public Node cr_pl_get_nd(){
         return (new Player_create(0,0,0,0)).getNode();
     }

@@ -171,7 +171,7 @@ public class stick_hero extends background implements score_interface,cherries,p
     public void setAhead_pillar(Pillar ahead_pillar) {
         this.ahead_pillar = ahead_pillar;
     }
-
+    private int adi_flag=100; //yeh flag prevent for any code to get run more than 1 time if not needed
     private int  pillar_length = 100;
     private int getPillar_width = 30;
     private int cherries=0;
@@ -187,6 +187,10 @@ public class stick_hero extends background implements score_interface,cherries,p
     }
 
 
+    public int getAdi_flag() {
+        return adi_flag;
+    }
+
     public void init() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
         Parent root = loader.load();
@@ -200,7 +204,7 @@ public class stick_hero extends background implements score_interface,cherries,p
         String srt = getRandomImage();
         Image backgroundImage = new Image(srt);
         ImageView backgroundImageView = new ImageView(backgroundImage);
-        System.out.println(srt);
+        System.out.println(srt); //debug statement for background
         newStage.setWidth(600);
         newStage.setHeight(800);
         newStage.setMaxWidth(600);
@@ -246,7 +250,7 @@ public class stick_hero extends background implements score_interface,cherries,p
 
             Timeline timeline = new Timeline( //thoda pdhna padega timeline ke baare me
                     new KeyFrame(Duration.millis(100), e -> {
-                        if (keyIsPressed && click_flag==true) {
+                        if (keyIsPressed && click_flag) {
                             s.extend(10);
 
 //                            System.out.println("HI"); Debug statement
@@ -263,24 +267,28 @@ public class stick_hero extends background implements score_interface,cherries,p
         });
 
         //Yha pr pillar ko dalna hai
-        Random random = new Random();
-        int width = Math.abs(random.nextInt()) % 100 + 100;
-        int height = 100;
-        int distance = Math.abs(random.nextInt()) % 400 + 100;
-
-        createRandomPillar((Pane) root);
+        if (adi_flag==100){
+            createmainPillar((Pane) root);
+            createRandomPillar((Pane) root);
+            adi_flag=101; // setting this so also not providing any setter function such that by any chance it cant re do and edit this intentionally not providing setter
+        }
         start_song();
         newStage.show();
     }
-
-    private void createRandomPillar(Pane root) {
+    public void createmainPillar(Pane root){
+        //will come on start Ninja jispr khara rhega
+        current_pillar = new Pillar(player.getNode().getX(),530,40,500);
+        root.getChildren().add(current_pillar.getNode());
+        return;
+    }
+    public void createRandomPillar(Pane root) {
         try {
 
             Random random = new Random();
-            int width = Math.abs(random.nextInt()) % 100 + 30;
-            int height = Math.abs(random.nextInt()) % 300 + 30;
+            int width = Math.abs(random.nextInt()) % 50 + 20; // width is random setting as likha tha assignment me
+            double height =player.getNode().getY()-50; // yha pr basically uski hieght acc to ninja niklegi wese to yeh ek constant as uska y axis will not change never
 
-            ahead_pillar = new Pillar(400, 400, width, height);
+            ahead_pillar = new Pillar(player.getNode().getX()+200, 530, width, height);
             int distance = Math.abs(random.nextInt()) % 400 + 100;
 
             // Set pillar position at a random distance
@@ -290,7 +298,7 @@ public class stick_hero extends background implements score_interface,cherries,p
             ((Pane) root).getChildren().add(ahead_pillar.getNode());
             return;
         }
-        catch (Exception e){
+        catch (Exception e){ //thodi error handling
             System.out.println("HI");
             e.printStackTrace();
             System.exit(-1);

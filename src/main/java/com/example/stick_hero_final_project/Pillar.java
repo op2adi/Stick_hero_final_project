@@ -30,4 +30,5 @@ public class Pillar {
     public Node getNode() {
         return this.pillar;
     }
+
 }

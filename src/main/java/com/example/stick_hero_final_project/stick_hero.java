@@ -22,9 +22,106 @@ import static java.lang.Thread.sleep;
 
 public class stick_hero extends background implements score_interface,cherries,points{
     private Player_create player;
-    private static final int height = 800;
-    private static final int width = 800;
-    private static final int stick_hero_height = 50;
+    private final int height = 80;
+
+    public Player_create getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player_create player) {
+        this.player = player;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getStick_hero_height() {
+        return stick_hero_height;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getPillar_length() {
+        return pillar_length;
+    }
+
+    public void setPillar_length(int pillar_length) {
+        this.pillar_length = pillar_length;
+    }
+
+    public int getGetPillar_width() {
+        return getPillar_width;
+    }
+
+    public void setGetPillar_width(int getPillar_width) {
+        this.getPillar_width = getPillar_width;
+    }
+
+    public int getCherries() {
+        return cherries;
+    }
+
+    public void setCherries(int cherries) {
+        this.cherries = cherries;
+    }
+
+    public boolean isKeyIsPressed() {
+        return keyIsPressed;
+    }
+
+    public void setKeyIsPressed(boolean keyIsPressed) {
+        this.keyIsPressed = keyIsPressed;
+    }
+
+    public boolean isClick_flag() {
+        return click_flag;
+    }
+
+    public void setClick_flag(boolean click_flag) {
+        this.click_flag = click_flag;
+    }
+
+    public Label getWelcomeText() {
+        return welcomeText;
+    }
+
+    public void setWelcomeText(Label welcomeText) {
+        this.welcomeText = welcomeText;
+    }
+
+    public stick_hero(Player_create player, int speed, int score, int pillar_length, int getPillar_width, int cherries, boolean keyIsPressed, boolean click_flag, Label welcomeText) {
+        this.player = null;
+        this.speed = speed;
+        this.score = score;
+        this.pillar_length = pillar_length;
+        this.getPillar_width = getPillar_width;
+        this.cherries = cherries;
+        this.keyIsPressed = keyIsPressed;
+        this.click_flag = click_flag;
+        this.welcomeText = welcomeText;
+    }
+
+    private final int width = 800;
+    private final int stick_hero_height = 50;
     private int speed = 1;
     private int score = 0;
     private int  pillar_length = 100;

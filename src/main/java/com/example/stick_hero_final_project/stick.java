@@ -1,12 +1,18 @@
 package com.example.stick_hero_final_project;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class stick {
+import java.util.concurrent.atomic.AtomicBoolean;
+
+public class stick extends Thread{
 
     private Rectangle stick;
     private double length;
@@ -68,54 +74,58 @@ public class stick {
         length = 0;
         stick.setHeight(length);
     }
-    public int falHorizontally(stick stick,Player_create Player,Pillar pillar){//player for getting values
-//        stick.getStick().setLayoutX(Player.getNode().getX()+40);
-//        stick.getStick().setLayoutY(Player.getNode().getY()+30);
-        double total = 2*stick.getLength(); // jb stick giregi to double hojayega
-        Duration timeset = Duration.seconds(2+ 3*(stick.length)%3); //kitna time lagega usko girne me
+    public int fallHorizontally(stick stick, Player_create player, Pillar pillar, Pane p, Scene newscene) throws InterruptedException {
+        p.setDisable(true);
+        AtomicBoolean flag_to_check = new AtomicBoolean(false);
+        Duration duration = Duration.seconds(0.1); //
+        Rotate rotate = new Rotate();
+        rotate.setPivotX(stick.getStick().getX() + stick.getLength() / 2); // Pivot X at the center of the stick
+        rotate.setPivotY(stick.getStick().getY() + stick.getStick().getHeight()); // Pivot Y at the bottom of the stick
+        rotate.setAngle(90); // Rotate the stick from top to bottom (90 degrees)
+
+        // imp line piche ke transforms ko remove krega
+        stick.getStick().getTransforms().clear();
+        stick.getStick().getTransforms().add(rotate);
+
+        // Create a Timeline for the rotation
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, event -> {
-                    // Start position
-                }),
-                new KeyFrame(timeset, event -> {
-                    // End position after the duration
-                    stick.getStick().setLayoutX(Player.getNode().getLayoutY()+total);
-                })
+                new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), 0)), // Start angle
+                new KeyFrame(duration, new KeyValue(rotate.angleProperty(), 90)) // End angle and duration
         );
+        timeline.setOnFinished(event -> {
+            player.movePlayerOnRotatedStick(stick, player,newscene);
+            p.setDisable(false);
+            flag_to_check.set(true);
+        });
 
-        // Configure the timeline
-        timeline.setCycleCount(1); // Play once
-        timeline.play();
-        return 1;
+        // Create a separate thread to handle the timeline and start it
+        Thread timelineThread = new Thread(() -> {
+            timeline.play();
+            try {
+                sleep(10);// Start the rotation animation
 
-    }
-/*
-    public void fallHorizontally(double targetX) {
-        // Calculate the fall speed based on the target position
-        double fallSpeed = 5; // Adjust the fall speed as needed
-
-        // Move the stick horizontally
-        AnimationTimer fallTimer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                double currentX = stick.getLayoutX();
-                double newX = currentX + fallSpeed;
-                stick.setLayoutX(newX);
-
-                // Check if the stick reached the target position
-                if (newX >= targetX - width) {
-                    reset(); // Reset the stick length
-                    setFalling(false); // Stop the horizontal falling
-                    this.stop(); // Stop the animation timer
-                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        };
+        });
+        timelineThread.start();
 
-        setFalling(true); // Set the stick to start falling horizontally
-        fallTimer.start();
+        // Wait for the timeline thread to finish
+        try {
+            timelineThread.join();
+            return 1;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+
+//        return 1;
     }
 
-*/
+
+
+
 
 
 }

@@ -18,7 +18,7 @@ public class main extends Application {
         stage.setOnCloseRequest(event -> {
             // Perform actions when the user attempts to close the window will cork when press red cross buttomn although not needed
             System.out.println("Closing the application...");
-            // You can add your custom close logic here
+
         });
         stage.setWidth(600);
         stage.setHeight(800);

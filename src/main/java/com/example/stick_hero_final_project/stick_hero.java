@@ -1,9 +1,9 @@
 package com.example.stick_hero_final_project;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.media.Media;
@@ -34,7 +35,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public void setStick_speed_fllag(int stick_speed_fllag) {
         this.stick_speed_fllag = stick_speed_fllag;
     }
-
+    private int postion_face = 0; // 0 means up and 1 means down
     private int stick_speed_fllag = 0;
     private String start_of_game_sound= "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\Start_of_Game.mp4";
 
@@ -268,6 +269,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public void init() throws IOException {
         setClick_flag(true);
         keyIsPressed = true;
+        current_pillar = getAhead_pillar();
         createRandomPillar((Pane) root);
 // Create a BackgroundImage
 
@@ -310,8 +312,26 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                             timeline.stop();
                             timeline.setCycleCount(0);
                         });
-                    };
-                });
+                    }
+                    else if (postion_face==0) {
+                        System.out.println("GUIII");
+                        // Simulating very fast movement and scaling using Timeline
+                        player.getNode().setY(player.getNode().getY() + 100);
+                        System.out.println(player.getNode().getY());
+                        // Scale the player vertically
+                        player.getNode().setScaleY(-1);
+                        postion_face = 1;
+
+                    }
+                    else{
+                        player.getNode().setY(500);
+                        System.out.println("BY");
+                        // Scale the player vertically
+                        player.getNode().setScaleY(-1);// Start the animation
+                        postion_face = 0;
+
+                    }
+        });
 
 
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {

@@ -15,16 +15,17 @@ public class Pillar {
         this.width = width;
         this.height = height;
         pillar = new Rectangle(width, height, Color.BLACK);
-        pillar.setLayoutX(x);
-        pillar.setLayoutY(y);
+        pillar.setX(x);
+        pillar.setY(y);
+//        pillar.setLayoutX(x);
+//        pillar.setLayoutY(y);
     }
 
     public Rectangle getPillar() {
-        return pillar;
+        return this.pillar;
     }
 
-    public void moveLeft(double distance) {
-        pillar.setLayoutX(pillar.getLayoutX() - distance);
+    public void moveLeft(double distance) {pillar.setLayoutX(pillar.getLayoutX() - distance);return;
     }
 
     public Node getNode() {

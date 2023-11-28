@@ -19,6 +19,7 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -26,17 +27,36 @@ import java.util.concurrent.atomic.AtomicReference;
 import static java.lang.Thread.sleep;
 
 public class stick_hero extends Thread implements score_interface,cherries,points{
+    public int getStick_speed_fllag() {
+        return stick_speed_fllag;
+    }
+
+    public void setStick_speed_fllag(int stick_speed_fllag) {
+        this.stick_speed_fllag = stick_speed_fllag;
+    }
+
+    private int stick_speed_fllag = 0;
     private String start_of_game_sound= "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\Start_of_Game.mp4";
 
     public String getStart_of_game() {
         return start_of_game_sound;
     }
-
+    private CountDownLatch latch = new CountDownLatch(0);
+    private Scene newScene;
     stick s = new stick(10, 10, 5, 0);
 
     public void setStart_of_game(String start_of_game_sound) {
         this.start_of_game_sound = start_of_game_sound;
     }
+
+    public CountDownLatch getLatch() {
+        return latch;
+    }
+
+    public void setLatch() {
+        latch = new CountDownLatch(1);
+    }
+
     public void setTest(int test) {
         this.test.set(test);
     }
@@ -160,6 +180,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     private final int width = 800;
     private final int stick_hero_height = 50;
     private int speed = 1;
+    private Stage newStage = new Stage();
     private int score = 0;
     private Pillar current_pillar;
     private Pillar ahead_pillar;
@@ -175,7 +196,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public Pillar getAhead_pillar() {
         return ahead_pillar;
     }
-
+    private Timeline timeline;
     public void setAhead_pillar(Pillar ahead_pillar) {
         this.ahead_pillar = ahead_pillar;
     }
@@ -184,7 +205,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     private int getPillar_width = 30;
     private int cherries=0;
     private boolean keyIsPressed = false;
-
+    private Parent root;
     private boolean click_flag = true; // will make it True once key is pressed
     @FXML
     private Label welcomeText;
@@ -198,27 +219,27 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public int getAdi_flag() {
         return adi_flag;
     }
-
-    public void init() throws IOException {
+    public void back_create() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
-        Parent root = loader.load();
+        //Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         player = cr_pl();
         // Create a new stage
-        Stage newStage = new Stage();
         newStage.setTitle("Stick_hero_game"); // Set the title of the new window
         // Set up the scene with the loaded FXML content
-        Scene newScene = new Scene(root);
+        newScene = new Scene(root);
         newStage.setScene(newScene);
-        String srt = getRandomImage();
-        Image backgroundImage = new Image(srt);
-        ImageView backgroundImageView = new ImageView(backgroundImage);
-        System.out.println(srt); //debug statement for background
         newStage.setWidth(600);
         newStage.setHeight(800);
         newStage.setMaxWidth(600);
         newStage.setMaxHeight(730);
-
-// Create a BackgroundImage
+        Image backgroundImage = null;
+        String srt = getRandomImage();
+        backgroundImage = new Image(srt);
         BackgroundImage background = new BackgroundImage(
                 backgroundImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -226,10 +247,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT
         );
-
-// Create a Background with the BackgroundImage
         Background backgroundWithImage = new Background(background);
-
+        ImageView backgroundImageView = new ImageView(backgroundImage);
+        System.out.println(srt); //debug statement for background
+// Create a Background with the BackgroundImage
 // Set the background for the Pane
         backgroundImageView.setFitWidth(600);
         backgroundImageView.setFitHeight(700);
@@ -239,97 +260,112 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         ((Pane) root).getChildren().add(player.getNode());
         player.getNode().setX(0);
         player.getNode().setY(500);
+        start_song();
+        newStage.show();
+//        while (newScene==null){}
+        init();
+    }
+    public void init() throws IOException {
+        setClick_flag(true);
+        keyIsPressed = true;
+        createRandomPillar((Pane) root);
+// Create a BackgroundImage
 
 
-        newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-//            keyIsPressed = false;
-//            for (int i=0;i<((Pane) root).getChildren().size();i++){
-//                if (((Pane) root).getChildren().get(i).equals(s))
-//            }
-
-        });
 
         newScene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-            keyIsPressed = true;
-            double x = event.getSceneX();
-            double y = event.getSceneY();
-            if (((Pane)root).getChildren().contains(s.getStick())) {
-                boolean remove = ((Pane) root).getChildren().remove(s.getStick());
-            }
-            s = new stick(0,0,5,0);
-            ((Pane) root).getChildren().add(s.getStick());
-            System.out.println("Start and end "+player.getNode().getX()+"    "+player.getNode().getY());
-            s.getStick().setLayoutX(player.getNode().getX() + 40);
-            s.getStick().setLayoutY(player.getNode().getY() + 30);
-            AtomicReference<Double> ext = new AtomicReference<>((double) 10);
-            Timeline timeline = new Timeline( //thoda pdhna padega timeline ke baare me
-                    new KeyFrame(Duration.millis(100), e -> {
-                        if (keyIsPressed) {
-                            s.extend(ext.get());
-//                            ext.updateAndGet(v -> new Double((double) (v * 0.9)));
-//                            System.out.println("HI"); Debug statement
+                    System.out.println(click_flag);
+                    try {
+                        latch.await();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    if (click_flag) {
+                        keyIsPressed = true;
+                        double x = event.getSceneX();
+                        double y = event.getSceneY();
+
+                        s = new stick(0, 0, 5, 0);
+                        if (!((Pane) root).getChildren().contains(s.getStick())) {
+                            ((Pane) root).getChildren().add(s.getStick());
                         }
-                    })
-            );
-            timeline.setCycleCount(timeline.INDEFINITE);
-            timeline.play();
-        });
+
+                        System.out.println("Start and end " + player.getNode().getX() + "    " + player.getNode().getY());
+                        s.getStick().setLayoutX(player.getNode().getX() + 40);
+                        s.getStick().setLayoutY(player.getNode().getY() + 30);
+                        AtomicReference<Double> ext = new AtomicReference<>((double) 5);
+                        timeline = new Timeline( //thoda pdhna padega timeline ke baare me
+                                new KeyFrame(Duration.millis(100), e -> {
+                                    if (keyIsPressed && click_flag) {
+                                        s.extend(speed);
+//                            latch.countDown();
+                                        ext.updateAndGet(v -> new Double((double) (v * 0.9)));
+//                            System.out.println("HI"); Debug statement
+                                    }
+                                })
+                        );
+                        timeline.setCycleCount(timeline.INDEFINITE);
+                        timeline.play();
+                        timeline.setOnFinished(actionEvent -> {
+                            timeline.stop();
+                            timeline.setCycleCount(0);
+                        });
+                    };
+                });
+
 
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-
+            if (keyIsPressed==true){
+                //timeline.stop();
+            System.out.println(ahead_pillar.getPillar().getX());
+            //CountDownLatch latch = new CountDownLatch(1);
             keyIsPressed = false;
             click_flag = false;
+            System.out.println(click_flag);
             setTest(0);
             newScene.getRoot().setDisable(true);
             root.setDisable(true);
-            Thread t1 = new Thread(() -> {
+            Runnable st = () -> {
                 try {
-                    test.set(s.fallHorizontally(s, player, ahead_pillar,(Pane) root,newScene)); // Start the rotation animation
+                    s.fallHorizontally(s, player, ahead_pillar, (Pane) root, newScene, current_pillar, newStage, this); // Start the rotation animation
+                    //latch.countDown();
                     System.out.println(test);
+
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-            });
+            };
 
-            Thread t2 = new Thread(() -> {
-                try {
-                    t1.join(); // Wait for t1 to complete
-                    System.out.println("HUHU");
-                    if (test.get()==1){
-                    click_flag = true;}
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                while (test.get() == 0) {
-                    // Wait for test to change
-                }
+            Runnable bt = () -> {
+                //t1.join(); // Wait for t1 to complete
+                System.out.println("HUHU");
+                //latch.await();
 
-            });
+                //click_flag = true;
 
-            t1.start(); // Start thread t1
-            try {
-                t1.join();
-                t2.start();
-                t2.join();
+
+            };
+
+            new Thread(st).start(); // Start thread t1
+            new Thread(bt).start();
+            //t1.join();
+            //t2.start();
+            //t2.join();
+            test.set(0);
 //                Thread.sleep(1000);
 //                newScene.getRoot().setDisable(false);
 
 
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            // Start thread t2
+            // Start thread t2}
+        }
         });
 
 
         //Yha pr pillar ko dalna hai
         if (adi_flag==100){
             createmainPillar((Pane) root);
-            createRandomPillar((Pane) root);
             adi_flag=101; // setting this so also not providing any setter function such that by any chance it cant re do and edit this intentionally not providing setter
         }
-        start_song();
-        newStage.show();
     }
     public void createmainPillar(Pane root){
         //will come on start Ninja jispr khara rhega
@@ -343,12 +379,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
             Random random = new Random();
             int width = Math.abs(random.nextInt()) % 50 + 20; // width is random setting as likha tha assignment me
             double height =player.getNode().getY()-50; // yha pr basically uski hieght acc to ninja niklegi wese to yeh ek constant as uska y axis will not change never
-
-            ahead_pillar = new Pillar(player.getNode().getX()+200, 530, width, height);
             int distance = Math.abs(random.nextInt()) % 400 + 100;
+            ahead_pillar = new Pillar(player.getNode().getX()+200, 530, width, height);
 
             // Set pillar position at a random distance
-            ahead_pillar.getNode().setLayoutX(distance);
+            ahead_pillar.getPillar().setX(distance);
 
             // Add the pillar to the root pane
             ((Pane) root).getChildren().add(ahead_pillar.getNode());

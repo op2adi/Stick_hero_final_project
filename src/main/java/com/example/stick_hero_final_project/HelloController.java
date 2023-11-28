@@ -43,9 +43,9 @@ public class HelloController {
         m.play();
         // Close the current stage
         stage.close();
-        stick_hero p = new stick_hero(new Player_create(0,0,0,0),1,0,100,30,0,false,true,new Label("HI"));
+        stick_hero p = new stick_hero(new Player_create(0,0,0,0),10,0,100,30,0,false,true,new Label("HI"));
 
-        p.init();
+        p.back_create();
     }
 
     public void closebutton(){

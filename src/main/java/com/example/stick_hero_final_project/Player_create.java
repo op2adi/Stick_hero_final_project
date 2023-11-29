@@ -8,6 +8,7 @@ import javafx.animation.TranslateTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.application.Platform;
 
@@ -36,7 +37,24 @@ public class Player_create {
         playerImageView.setFitWidth(40);
         playerImageView.setFitHeight(40);
     }
-    public void movePlayerOnRotatedStick(stick stick, Player_create player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage,stick_hero sth) throws InterruptedException {
+
+    public int getCheck_fall_flag() {
+        return check_fall_flag;
+    }
+
+    public void setCheck_fall_flag(int check_fall_flag) {
+        this.check_fall_flag = check_fall_flag;
+    }
+
+    public ImageView getPlayerImageView() {
+        return playerImageView;
+    }
+
+    public void setPlayerImageView(ImageView playerImageView) {
+        this.playerImageView = playerImageView;
+    }
+
+    public void movePlayerOnRotatedStick(stick stick, Player_create player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage, stick_hero sth) throws InterruptedException {
         check_fall_flag = 0;
         double stickAngle = stick.getStick().getRotate(); // Get the current rotation angle of the stick
         double startx = player.getNode().getX();
@@ -46,6 +64,8 @@ public class Player_create {
         double pillarstarty = pillar1.getPillar().getY();
         System.out.println(pillarstartx);
         double endPointX = player.getNode().getX() + stick.getStick().getHeight();
+//        double endpt = stick.getStick().getX();
+//        System.out.println(endpt);
         double endPointY = player.getNode().getY();
 
         System.out.println("Stick angle: " + stickAngle);
@@ -67,7 +87,7 @@ public class Player_create {
         //Thread.sleep(200);
         timeline.setOnFinished(actionEvent -> {
             CountDownLatch latch = new CountDownLatch(3);
-            if (endPointX < pillarstartx - pillar1.getPillar().getWidth() || endPointX > pillarstartx) {
+            if (endPointX < pillarstartx-2 - pillar1.getPillar().getWidth() || endPointX > pillarstartx-2 || sth.getPostion_face()==1) {
                 System.out.println(pillarstartx - pillar1.getPillar().getWidth());
                 System.out.println(pillarstartx);
                 check_fall_flag = 1;
@@ -77,9 +97,8 @@ public class Player_create {
                 //player.getNode().setY(10000); debug
 
                 // Creating a TranslateTransition for the player
-                TranslateTransition playerTransition = new TranslateTransition(Duration.seconds(3), player.getNode());
-                playerTransition.setByY(600); // Move the player's node by 550 pixels vertically
-
+                TranslateTransition playerTransition = new TranslateTransition(Duration.seconds(1), player.getNode());
+                playerTransition.setByY(600); // Move the player's node by 600 game over
                 // Setting up a timeline to control the transition
                 Timeline timeline1 = new Timeline(
                         new KeyFrame(Duration.ZERO, new KeyValue(player.getNode().opacityProperty(), 1.0)),
@@ -97,11 +116,20 @@ public class Player_create {
                     //newstage.close();
                     FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("Gameover.fxml"));
                     Scene scene = null;
+
                     try {
-                        scene = new Scene(fxmlLoader.load(), 320, 240);
+                        Parent root = fxmlLoader.load();
+                        scene = new Scene(root, 320, 240);
+                        GameOver controller = fxmlLoader.getController();
+                        // Access the Label and set its text
+                        Label scoreLabel = controller.score_tell; // Replace 'score_tell' with the actual ID you've given
+                        scoreLabel.setText("Your Score "+String.valueOf(sth.getScore_view()));
+                        scoreLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+
+
                     //Stage stage = null;
                     newstage.setTitle("Stick Hero Ninja !!!");
                     newstage.setScene(scene);
@@ -159,6 +187,8 @@ public class Player_create {
                         sth.setSpeed(sth.getSpeed() / 2);
                     }
                     sth.setStick_speed_fllag(sth.getStick_speed_fllag() + 1);
+                    sth.setScore(sth.getScore()+1);
+                    sth.setPostion_face(0);
                     sth.init();
                     //newstage.close();
 //                newScene.getRoot().getChildren().clear();

@@ -10,8 +10,10 @@ import java.io.IOException;
 public class GameOver {
     public Button restart;
     public Button exit_from_game;
+    public Label score_tell;
 
     public void Restart(ActionEvent actionEvent) throws IOException {
+//        score_tell.setText();
         Stage stage;
         stage = (Stage) restart.getScene().getWindow();
         stage.close();

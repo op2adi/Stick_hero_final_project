@@ -10,8 +10,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -99,6 +102,70 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     public int getSpeed() {
         return speed;
+    }
+
+    public String getStart_of_game_sound() {
+        return start_of_game_sound;
+    }
+
+    public void setStart_of_game_sound(String start_of_game_sound) {
+        this.start_of_game_sound = start_of_game_sound;
+    }
+
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
+    }
+
+    public Scene getNewScene() {
+        return newScene;
+    }
+
+    public void setNewScene(Scene newScene) {
+        this.newScene = newScene;
+    }
+
+    public stick getS() {
+        return s;
+    }
+
+    public void setS(stick s) {
+        this.s = s;
+    }
+
+    public AtomicInteger getTest() {
+        return test;
+    }
+
+    public void setTest(AtomicInteger test) {
+        this.test = test;
+    }
+
+    public Stage getNewStage() {
+        return newStage;
+    }
+
+    public void setNewStage(Stage newStage) {
+        this.newStage = newStage;
+    }
+
+    public Timeline getTimeline() {
+        return timeline;
+    }
+
+    public void setTimeline(Timeline timeline) {
+        this.timeline = timeline;
+    }
+
+    public Parent getRoot() {
+        return root;
+    }
+
+    public void setRoot(Parent root) {
+        this.root = root;
+    }
+
+    public void setAdi_flag(int adi_flag) {
+        this.adi_flag = adi_flag;
     }
 
     public void setSpeed(int speed) {
@@ -211,6 +278,16 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     @FXML
     private Label welcomeText;
 
+    public int getScore_view() {
+        return score;
+    }
+
+    public void setScore_view(int scor) {
+        score_view.setText("Score" + String.valueOf(scor));
+    }
+
+    private Label score_view;
+
     @FXML
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to Game");
@@ -221,6 +298,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         return adi_flag;
     }
     public void back_create() throws IOException {
+        score_view = new Label("Score"+String.valueOf(score));
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
         //Parent root = null;
         try {
@@ -255,7 +334,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 // Set the background for the Pane
         backgroundImageView.setFitWidth(600);
         backgroundImageView.setFitHeight(700);
+        score_view.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         ((Pane) root).getChildren().add(backgroundImageView);
+        ((Pane) root).getChildren().add(score_view);
+        score_view.setLayoutX(300); // Position from the right
+        score_view.setLayoutY(100);
 //        initialize1((Pane) root);
         // Show the new stage
         ((Pane) root).getChildren().add(player.getNode());
@@ -266,9 +349,22 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //        while (newScene==null){}
         init();
     }
+
+    public int getPostion_face() {
+        return postion_face;
+    }
+
+    public void setPostion_face(int postion_face) {
+        this.postion_face = postion_face;
+    }
+
     public void init() throws IOException {
+        setScore_view(score);
         setClick_flag(true);
         keyIsPressed = true;
+        if (ahead_pillar!=null && ((Pane) root).getChildren().contains(ahead_pillar.getRedblock())){
+            ((Pane) root).getChildren().remove(ahead_pillar.getRedblock());
+        }
         current_pillar = getAhead_pillar();
         createRandomPillar((Pane) root);
 // Create a BackgroundImage
@@ -313,26 +409,36 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                             timeline.setCycleCount(0);
                         });
                     }
-                    else if (postion_face==0) {
-                        System.out.println("GUIII");
-                        // Simulating very fast movement and scaling using Timeline
-                        player.getNode().setY(player.getNode().getY() + 100);
-                        System.out.println(player.getNode().getY());
-                        // Scale the player vertically
-                        player.getNode().setScaleY(-1);
-                        postion_face = 1;
 
-                    }
-                    else{
-                        player.getNode().setY(500);
-                        System.out.println("BY");
-                        // Scale the player vertically
-                        player.getNode().setScaleY(-1);// Start the animation
-                        postion_face = 0;
-
-                    }
         });
+        newScene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+            double x = event.getSceneX();
+            double y = event.getSceneY();
+            System.out.println("X: " + x + ", Y: " + y);
+        });
+        newScene.setOnKeyPressed(event ->{
+            if (event.getCode() == KeyCode.SPACE && !click_flag){
+                if (postion_face==0) {
+                    player.getNode().setScaleY(-1);
+                    System.out.println("GUIII");
+                    // Simulating very fast movement and scaling using Timeline
+                    player.getNode().setLayoutY(player.getNode().getLayoutY() + 20);
+                    System.out.println(player.getNode().getY());
+                    // Scale the player vertically
 
+                    postion_face = 1;
+
+                }
+                else{
+                    player.getNode().setLayoutY(player.getNode().getLayoutY()-20);
+                    System.out.println("BY");
+                    // Scale the player vertically
+                    player.getNode().setScaleY(1);// Start the animation
+                    postion_face = 0;
+
+                }
+            }
+        });
 
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (keyIsPressed==true){
@@ -404,9 +510,14 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
             // Set pillar position at a random distance
             ahead_pillar.getPillar().setX(distance);
+            Rectangle rd = new Rectangle(5, 2, Color.RED);
+            rd.setY(ahead_pillar.getPillar().getY());
+            rd.setFill(Color.RED);
+            rd.setX((ahead_pillar.getPillar().getX()+width/2));
+            ahead_pillar.setRedblock(rd);
 
             // Add the pillar to the root pane
-            ((Pane) root).getChildren().add(ahead_pillar.getNode());
+            ((Pane) root).getChildren().addAll(ahead_pillar.getNode(), ahead_pillar.getRedblock());
             return;
         }
         catch (Exception e){ //thodi error handling

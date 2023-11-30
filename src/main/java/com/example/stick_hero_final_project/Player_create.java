@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -78,6 +79,12 @@ public class Player_create {
         System.out.println("Start X: " + player.getNode().getX() + " Start Y: " + player.getNode().getY());
         System.out.println("Endpoint X: " + endPointX);
         System.out.println("Endpoint Y: " + endPointY);
+        System.out.println("Lal"+(pillar1.getPillar().getX()-5));
+        System.out.println("Lql"+pillar1.getPillar().getX());
+        System.out.println(pillarstartx - pillar1.getPillar().getWidth());
+        System.out.println(pillarstartx - pillar1.getWidth());
+        System.out.println(pillarstartx);
+        System.out.println(pillar1.getPillar().getLayoutX());
 
         // Create a Timeline for the player's movement
         Timeline timeline = new Timeline(
@@ -93,7 +100,7 @@ public class Player_create {
         //Thread.sleep(200);
         timeline.setOnFinished(actionEvent -> {
             CountDownLatch latch = new CountDownLatch(3);
-            if (endPointX < pillarstartx - pillar1.getPillar().getWidth()+1 || endPointX > pillarstartx-1 || sth.getPostion_face()==1) {
+            if (endPointX < pillarstartx - pillar1.getPillar().getWidth() || endPointX > pillarstartx || sth.getPostion_face()==1) {
                 System.out.println(pillarstartx - pillar1.getPillar().getWidth());
                 System.out.println(pillarstartx - pillar1.getWidth());
                 System.out.println(pillarstartx);
@@ -165,9 +172,9 @@ public class Player_create {
                     return;
                 });
 
-            } else if (endPointX<=pillar1.getRedblock().getX()+pillar1.getRedblock().getWidth() && endPointX>=pillar1.getRedblock().getX()) {
+            } else if (endPointX>=pillar1.getPillar().getX()-5 && endPointX<=pillar1.getPillar().getX()) {
                 System.out.println(pillar1.getRedblock().getX());
-                System.out.println(pillar1.getRedblock().getX()+pillar1.getRedblock().getWidth());
+                System.out.println(pillar1.getRedblock().getX()-pillar1.getRedblock().getWidth()/2);
                 System.out.println("Perfection");
                 sth.setScore(sth.getScore()+1);
                 Label label = new Label("Perfection");
@@ -177,6 +184,9 @@ public class Player_create {
                 popup.getContent().add(label);
                 label.setMinWidth(80);
                 label.setMinHeight(50);
+                Parent root1 = newScene.getRoot();
+//                root1.getChildrenUnmodifiable().add(popup.getOwnerNode());
+
                 Timeline timeline8 = new Timeline(new KeyFrame(Duration.seconds(0.5), ee -> {
                     if (!popup.isShowing()) {
                         popup.show(newstage);
@@ -252,7 +262,24 @@ public class Player_create {
                             try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("meta_data.txt"))) {
                                 outputStream.writeObject(currentScore);
                                 //outputStream.writeObject(sth.getCherries());
+                                Label label = new Label("New High Score");
 
+                                Popup popup = new Popup();
+                                label.setStyle(" -fx-background-color: white;");
+                                popup.getContent().add(label);
+                                label.setMinWidth(80);
+                                label.setMinHeight(50);
+                                Timeline timeline8 = new Timeline(new KeyFrame(Duration.seconds(1), ee -> {
+                                    if (!popup.isShowing()) {
+                                        popup.show(newstage);
+                                    }
+                                }));
+                                timeline.setCycleCount(1); // Run only once
+                                System.out.println("File created and initial data written."); //DEbug
+                                timeline8.play();
+                                timeline8.setOnFinished(actionEvent1 -> {
+                                    popup.hide();
+                                });
                                 System.out.println("New high score or data written to file.");
                             } catch (IOException e) {
                                 e.printStackTrace();

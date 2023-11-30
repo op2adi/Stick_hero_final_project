@@ -514,6 +514,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
             rd.setY(ahead_pillar.getPillar().getY());
             rd.setFill(Color.RED);
             rd.setX((ahead_pillar.getPillar().getX()+width/2));
+            System.out.println(rd.getX());
             ahead_pillar.setRedblock(rd);
 
             // Add the pillar to the root pane

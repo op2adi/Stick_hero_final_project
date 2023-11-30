@@ -12,14 +12,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.application.Platform;
 
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.concurrent.CountDownLatch;
 
 public class Player_create {
@@ -54,7 +60,7 @@ public class Player_create {
         this.playerImageView = playerImageView;
     }
 
-    public void movePlayerOnRotatedStick(stick stick, Player_create player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage, stick_hero sth) throws InterruptedException {
+    public void movePlayerOnRotatedStick(stick stick, Player_create player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage, stick_hero sth)  throws InterruptedException {
         check_fall_flag = 0;
         double stickAngle = stick.getStick().getRotate(); // Get the current rotation angle of the stick
         double startx = player.getNode().getX();
@@ -87,8 +93,9 @@ public class Player_create {
         //Thread.sleep(200);
         timeline.setOnFinished(actionEvent -> {
             CountDownLatch latch = new CountDownLatch(3);
-            if (endPointX < pillarstartx-2 - pillar1.getPillar().getWidth() || endPointX > pillarstartx-2 || sth.getPostion_face()==1) {
+            if (endPointX < pillarstartx - pillar1.getPillar().getWidth()+1 || endPointX > pillarstartx-1 || sth.getPostion_face()==1) {
                 System.out.println(pillarstartx - pillar1.getPillar().getWidth());
+                System.out.println(pillarstartx - pillar1.getWidth());
                 System.out.println(pillarstartx);
                 check_fall_flag = 1;
 
@@ -125,6 +132,27 @@ public class Player_create {
                         Label scoreLabel = controller.score_tell; // Replace 'score_tell' with the actual ID you've given
                         scoreLabel.setText("Your Score "+String.valueOf(sth.getScore_view()));
                         scoreLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+                        Label high_score = controller.high_score_tell;
+                        high_score.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+                        int highScore = 0;
+                        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("meta_data.txt"))) {
+                            Integer previousScore = (Integer) inputStream.readObject();
+                                if (previousScore != null) {
+                                        highScore = previousScore;
+                                        System.out.println("High score read from file: " + highScore);
+                                    } else {
+                                        System.out.println("Invalid data found in the file.");
+                                    }
+                        } catch (FileNotFoundException e) {
+                            System.out.println("File not found. No high score recorded yet.");
+                        } catch (IOException | ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        catch (Exception e){
+                            highScore = 0;
+                        }
+
+                        high_score.setText("High Score"+highScore);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -135,6 +163,30 @@ public class Player_create {
                     newstage.setScene(scene);
                     newstage.setResizable(true);
                     return;
+                });
+
+            } else if (endPointX<=pillar1.getRedblock().getX()+pillar1.getRedblock().getWidth() && endPointX>=pillar1.getRedblock().getX()) {
+                System.out.println(pillar1.getRedblock().getX());
+                System.out.println(pillar1.getRedblock().getX()+pillar1.getRedblock().getWidth());
+                System.out.println("Perfection");
+                sth.setScore(sth.getScore()+1);
+                Label label = new Label("Perfection");
+
+                Popup popup = new Popup();
+                label.setStyle(" -fx-background-color: white;");
+                popup.getContent().add(label);
+                label.setMinWidth(80);
+                label.setMinHeight(50);
+                Timeline timeline8 = new Timeline(new KeyFrame(Duration.seconds(0.5), ee -> {
+                    if (!popup.isShowing()) {
+                        popup.show(newstage);
+                    }
+                }));
+                timeline.setCycleCount(1); // Run only once
+                System.out.println("Perfection."); //DEbug
+                timeline8.play();
+                timeline8.setOnFinished(actionEvent1 -> {
+                    popup.hide();
                 });
 
             }
@@ -189,6 +241,53 @@ public class Player_create {
                     sth.setStick_speed_fllag(sth.getStick_speed_fllag() + 1);
                     sth.setScore(sth.getScore()+1);
                     sth.setPostion_face(0);
+                    File metaDataFile = new File("meta_data.txt");
+//                    if (metaDataFile.length()>0 && metaDataFile.exists()){
+                    try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("meta_data.txt"))) {
+                        Integer previousScore = (Integer) inputStream.readObject();
+
+                        int currentScore = sth.getScore_view();
+
+                        if (previousScore == null || currentScore > previousScore) {
+                            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("meta_data.txt"))) {
+                                outputStream.writeObject(currentScore);
+                                //outputStream.writeObject(sth.getCherries());
+
+                                System.out.println("New high score or data written to file.");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            System.out.println("Current score is not higher than the previous high score."); //Debug
+                        }
+                    } catch (Exception e) {
+                        // File doesn't exist, so create and write the current score
+                        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("meta_data.txt"))) {
+                            outputStream.writeObject(sth.getScore_view());
+                            //outputStream.writeObject(sth.getCherries());
+                            Label label = new Label("New High Score");
+
+                            Popup popup = new Popup();
+                            label.setStyle(" -fx-background-color: white;");
+                            popup.getContent().add(label);
+                            label.setMinWidth(80);
+                            label.setMinHeight(50);
+                            Timeline timeline8 = new Timeline(new KeyFrame(Duration.seconds(0.5), ee -> {
+                                if (!popup.isShowing()) {
+                                    popup.show(newstage);
+                                }
+                            }));
+                            timeline.setCycleCount(1); // Run only once
+                            System.out.println("File created and initial data written."); //DEbug
+                            timeline8.play();
+                            timeline8.setOnFinished(actionEvent1 -> {
+                                popup.hide();
+                            });
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+
                     sth.init();
                     //newstage.close();
 //                newScene.getRoot().getChildren().clear();

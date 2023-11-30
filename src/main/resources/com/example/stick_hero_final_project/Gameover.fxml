@@ -4,10 +4,11 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stick_hero_final_project.GameOver">
+<AnchorPane prefHeight="500.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.stick_hero_final_project.GameOver">
    <children>
       <Button fx:id="restart" layoutX="165.0" layoutY="79.0" mnemonicParsing="false" onAction="#Restart" prefHeight="78.0" prefWidth="225.0" text="RESTART" />
       <Button fx:id="exit_from_game" layoutX="165.0" layoutY="184.0" mnemonicParsing="false" onAction="#Exit" prefHeight="78.0" prefWidth="225.0" text="EXIT" />
       <Label fx:id="score_tell" layoutX="49.0" layoutY="281.0" prefHeight="54.0" prefWidth="521.0" />
+      <Label fx:id="high_score_tell" layoutX="49" layoutY="481" prefHeight="54.0" prefWidth="521.0" />
    </children>
 </AnchorPane>

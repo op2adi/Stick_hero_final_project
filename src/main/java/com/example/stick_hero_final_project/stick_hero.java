@@ -26,11 +26,11 @@ import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-
+import java.io.Serializable;
 
 import static java.lang.Thread.sleep;
 
-public class stick_hero extends Thread implements score_interface,cherries,points{
+public class stick_hero extends Thread implements score_interface,cherries,points,Serializable{
     public int getStick_speed_fllag() {
         return stick_speed_fllag;
     }

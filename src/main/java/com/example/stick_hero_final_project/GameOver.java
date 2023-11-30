@@ -11,6 +11,7 @@ public class GameOver {
     public Button restart;
     public Button exit_from_game;
     public Label score_tell;
+    public Label high_score_tell;
 
     public void Restart(ActionEvent actionEvent) throws IOException {
 //        score_tell.setText();

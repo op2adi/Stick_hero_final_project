@@ -25,7 +25,7 @@ public class stick extends Thread {
         this.ht = ht;
     }
 
-    double ht;
+    private double ht;
     private Rectangle stick;
     private double length;
 

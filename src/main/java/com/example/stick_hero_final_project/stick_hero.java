@@ -22,6 +22,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -362,10 +363,14 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         score_view.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         ((Pane) root).getChildren().add(backgroundImageView);
         ((Pane) root).getChildren().add(score_view);
-        ((Pane) root).getChildren().add(view);
-        view.setVisible(false);
-        score_view.setLayoutX(300); // Position from the right
+//        ((Pane) root).getChildren().add(view);
+        view.setLayoutX(100);
+        view.setLayoutY(300);
+        view.setText("hu");
+//        view.setVisible(false);
+        score_view.setLayoutX(100); // Position from the right
         score_view.setLayoutY(100);
+
 //        initialize1((Pane) root);
         // Show the new stage
         ((Pane) root).getChildren().add(player.getNode());
@@ -390,8 +395,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
             ((Pane) root).getChildren().remove(cherry_1);
         }
         cherry_1 =null;
-        view.setVisible(false);
+//        view.setVisible(false);
         setScore_view(score);
+//        ((Pane) root).getChildren().add(view);
+        view.setLayoutX(300);
+        view.setLayoutY(300);
         setClick_flag(true);
         keyIsPressed = true;
         if (ahead_pillar!=null && ((Pane) root).getChildren().contains(ahead_pillar.getRedblock())){
@@ -399,6 +407,20 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         }
         current_pillar = getAhead_pillar();
         createRandomPillar((Pane) root);
+        view.setLayoutX(ahead_pillar.getPillar().getX()+ahead_pillar.getPillar().getWidth()/2);
+        view.setLayoutY(480);
+        view.setStyle("-fx-font-size: 20;");
+        if (((Pane)root).getChildren().contains(view)){
+        ((Pane)root).getChildren().remove(view);
+        view.setOpacity(1.0);
+        view.setTextFill(Color.BLACK);
+        view.setVisible(false);
+        }
+//        view = new Label("+1");
+        view.setText("+1");
+        view.setVisible(false);
+        ((Pane)root).getChildren().add(view);
+//        view.setVisible(false);
 // Create a BackgroundImage
 
 

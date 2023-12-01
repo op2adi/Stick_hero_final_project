@@ -69,7 +69,7 @@ public class Player_create {
         double pillarstartx = pillar1.getPillar().getX();
         double pillarstarty = pillar1.getPillar().getY();
         System.out.println(pillarstartx);
-        double endPointX = player.getNode().getX()+40+stick.ht;
+        double endPointX = player.getNode().getX()+40+stick.getHt();
 //        double endpt = stick.getStick().getX();
 //        System.out.println(endpt);
         double endPointY = player.getNode().getY();
@@ -83,7 +83,7 @@ public class Player_create {
         System.out.println("Lql"+pillar1.getPillar().getX());
         System.out.println(pillarstartx + pillar1.getPillar().getWidth());
 //        System.out.println(pillarstartx - pillar1.getWidth());
-        System.out.println("new end = "+(player.getNode().getX()+40+stick.ht));
+        System.out.println("new end = "+(player.getNode().getX()+40+stick.getHt()));
         System.out.println(pillarstartx);
         System.out.println(pillar1.getPillar().getLayoutX());
         System.out.println("Height"+pillar1.getHeight());
@@ -213,7 +213,28 @@ public class Player_create {
                 System.out.println("Perfection");
                 sth.setScore(sth.getScore()+1);
                 Label label = new Label("Perfection");
+//                sth.setView(label);
+                sth.getView().setVisible(true);
+                sth.getView().setText("+1");
+//                sth.getView().setVisible(true);
+                Platform.runLater(() -> {
+                    sth.getView().setVisible(true);
+//                sth.getView().setLayoutY(endPointY);
+                    ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(2), sth.getView());
+                    scaleTransition.setToX(2.5); // Scale factor for width
+                    scaleTransition.setToY(2.5); // Scale factor for height
 
+                    // Transition to fade out
+                    FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), sth.getView());
+                    fadeTransition.setToValue(0); // Set target opacity
+
+                    // Sequential transition combining both scale and fade transitions
+                    ParallelTransition seqTransition = new ParallelTransition(scaleTransition, fadeTransition);
+                    seqTransition.play();
+                });
+                sth.getView().setVisible(true);
+//                sth.getView().setf
+//                sth.getView().setVisible(false);
                 Popup popup = new Popup();
                 label.setStyle(" -fx-background-color: white;");
                 popup.getContent().add(label);

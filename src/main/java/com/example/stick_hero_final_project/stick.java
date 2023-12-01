@@ -17,7 +17,15 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class stick extends Thread {
+    public double getHt() {
+        return ht;
+    }
 
+    public void setHt(double ht) {
+        this.ht = ht;
+    }
+
+    double ht;
     private Rectangle stick;
     private double length;
 
@@ -43,7 +51,8 @@ public class stick extends Thread {
         this.width = width;
         stick = new Rectangle(width, length, Color.BLACK);
         stick.setX(x);
-        stick.setY(y - length);  // Adjust the y position based on the length
+        stick.setY(y - length);  // Adjust the y position based on the length'
+        ht = 0;
     }
     public stick nr(){
         return new stick(0,0,0,0);
@@ -74,6 +83,7 @@ public class stick extends Thread {
 
         stick.setY(stick.getY() - amount);
         stick.setHeight(stick.getHeight() + amount);
+        this.ht = stick.getHeight();
     }
 
     public void reset() {

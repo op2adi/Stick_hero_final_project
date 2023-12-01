@@ -69,7 +69,7 @@ public class Player_create {
         double pillarstartx = pillar1.getPillar().getX();
         double pillarstarty = pillar1.getPillar().getY();
         System.out.println(pillarstartx);
-        double endPointX = player.getNode().getX() + stick.getStick().getHeight();
+        double endPointX = player.getNode().getX()+40+stick.ht;
 //        double endpt = stick.getStick().getX();
 //        System.out.println(endpt);
         double endPointY = player.getNode().getY();
@@ -78,11 +78,12 @@ public class Player_create {
         System.out.println("Start X: " + player.getNode().getX() + " Start Y: " + player.getNode().getY());
         System.out.println("Endpoint X: " + endPointX);
         System.out.println("Endpoint Y: " + endPointY);
-        System.out.println("Lal"+(pillar1.getPillar().getX()-5));
-        System.out.println("LAL_block"+pillar1.getRedblock().getX());
+        System.out.println("Lal"+(pillar1.getPillar().getX()+pillar1.getPillar().getWidth()/2));
+        System.out.println("LAL_end"+(pillar1.getPillar().getX()+pillar1.getPillar().getWidth()/2+5));
         System.out.println("Lql"+pillar1.getPillar().getX());
-        System.out.println(pillarstartx - pillar1.getPillar().getWidth());
-        System.out.println(pillarstartx - pillar1.getWidth());
+        System.out.println(pillarstartx + pillar1.getPillar().getWidth());
+//        System.out.println(pillarstartx - pillar1.getWidth());
+        System.out.println("new end = "+(player.getNode().getX()+40+stick.ht));
         System.out.println(pillarstartx);
         System.out.println(pillar1.getPillar().getLayoutX());
         System.out.println("Height"+pillar1.getHeight());
@@ -100,7 +101,7 @@ public class Player_create {
 
 // Create KeyFrames for animation
         KeyFrame endKeyFrame = new KeyFrame(Duration.seconds((endPointX - startX) / 100),
-                new KeyValue(player.getNode().xProperty(), endPointX),
+                new KeyValue(player.getNode().xProperty(), endPointX-5),
                 new KeyValue(player.getNode().yProperty(), endPointY)
         );
 
@@ -114,7 +115,7 @@ public class Player_create {
         timeline.setOnFinished(actionEvent -> {
             timeline78.stop();
             CountDownLatch latch = new CountDownLatch(3);
-            if (endPointX < pillarstartx - pillar1.getPillar().getWidth() || endPointX > pillarstartx || sth.getPostion_face()==1) {
+            if (endPointX < pillarstartx  || endPointX > pillarstartx+pillar1.getPillar().getWidth() || sth.getPostion_face()==1) {
 
 //                showAlert("+1");
 //                stick_hero controller1  = curr_loader.getController();
@@ -197,7 +198,7 @@ public class Player_create {
                     return;
                 });
 
-            } else if (endPointX>=pillar1.getPillar().getX()-5-pillar1.getPillar().getWidth()/2 && endPointX<=pillar1.getPillar().getX()-pillar1.getPillar().getWidth()/2) {
+            } else if (endPointX>=pillar1.getPillar().getX()+pillar1.getPillar().getWidth()/2 && endPointX<=pillar1.getPillar().getX()+pillar1.getPillar().getWidth()/2+5) {
 //                stick_hero controller1  = curr_loader.getController();
 //
 //                Label scoreLabel1 = controller1.getView();
@@ -421,7 +422,7 @@ public class Player_create {
         boolean collisionDetected = playerImageView.getBoundsInParent().intersects(cheery_image.getBoundsInParent());
 //        System.out.println("mskmsdsmdskdmsdks");
         if (collisionDetected){
-            System.out.println("halndnskdnadlaskdand");
+//            System.out.println("halndnskdnadlaskdand");
         }
         return collisionDetected;}
         return false;

@@ -421,8 +421,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                         }
 
                         System.out.println("Start and end " + player.getNode().getX() + "    " + player.getNode().getY());
-                        s.getStick().setX(player.getNode().getX() + 40);
-                        s.getStick().setY(player.getNode().getY() + 30);
+                        s.getStick().setX(player.getNode().getX() + (double) 40);
+                        s.getStick().setY(player.getNode().getY() + (double) 30);
                         AtomicReference<Double> ext = new AtomicReference<>((double) 5);
                         timeline = new Timeline( //thoda pdhna padega timeline ke baare me
                                 new KeyFrame(Duration.millis(100), e -> {
@@ -443,7 +443,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                     }
 
         });
-        newScene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+        newScene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
             double x = event.getSceneX();
             double y = event.getSceneY();
             System.out.println("X: " + x + ", Y: " + y);

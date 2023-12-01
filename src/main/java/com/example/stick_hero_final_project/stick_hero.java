@@ -39,7 +39,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         this.stick_speed_fllag = stick_speed_fllag;
     }
     private int postion_face = 0; // 0 means up and 1 means down
+
+//    private
     private int stick_speed_fllag = 0;
+    private ImageView cherry_1;
     private String start_of_game_sound= "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\Start_of_Game.mp4";
 
     public String getStart_of_game() {
@@ -292,7 +295,28 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     protected void onHelloButtonClick() {
         welcomeText.setText("Welcome to Game");
     }
+    private FXMLLoader loader;
+    public Label view;
 
+    public void setScore_view(Label score_view) {
+        this.score_view = score_view;
+    }
+
+    public FXMLLoader getLoader() {
+        return loader;
+    }
+
+    public void setLoader(FXMLLoader loader) {
+        this.loader = loader;
+    }
+
+    public Label getView() {
+        return view;
+    }
+
+    public void setView(Label view) {
+        this.view = view;
+    }
 
     public int getAdi_flag() {
         return adi_flag;
@@ -300,7 +324,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public void back_create() throws IOException {
         score_view = new Label("Score"+String.valueOf(score));
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("game.fxml"));
+        loader = new FXMLLoader(getClass().getResource("game.fxml"));
         //Parent root = null;
         try {
             root = loader.load();
@@ -332,11 +356,14 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         System.out.println(srt); //debug statement for background
 // Create a Background with the BackgroundImage
 // Set the background for the Pane
+        view = new Label();
         backgroundImageView.setFitWidth(600);
         backgroundImageView.setFitHeight(700);
         score_view.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         ((Pane) root).getChildren().add(backgroundImageView);
         ((Pane) root).getChildren().add(score_view);
+        ((Pane) root).getChildren().add(view);
+        view.setVisible(false);
         score_view.setLayoutX(300); // Position from the right
         score_view.setLayoutY(100);
 //        initialize1((Pane) root);
@@ -359,6 +386,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     public void init() throws IOException {
+        if (((Pane) root).getChildren().contains(cherry_1)){
+            ((Pane) root).getChildren().remove(cherry_1);
+        }
+        cherry_1 =null;
+        view.setVisible(false);
         setScore_view(score);
         setClick_flag(true);
         keyIsPressed = true;
@@ -389,8 +421,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                         }
 
                         System.out.println("Start and end " + player.getNode().getX() + "    " + player.getNode().getY());
-                        s.getStick().setLayoutX(player.getNode().getX() + 40);
-                        s.getStick().setLayoutY(player.getNode().getY() + 30);
+                        s.getStick().setX(player.getNode().getX() + 40);
+                        s.getStick().setY(player.getNode().getY() + 30);
                         AtomicReference<Double> ext = new AtomicReference<>((double) 5);
                         timeline = new Timeline( //thoda pdhna padega timeline ke baare me
                                 new KeyFrame(Duration.millis(100), e -> {
@@ -453,7 +485,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
             root.setDisable(true);
             Runnable st = () -> {
                 try {
-                    s.fallHorizontally(s, player, ahead_pillar, (Pane) root, newScene, current_pillar, newStage, this); // Start the rotation animation
+                    s.fallHorizontally(s, player, ahead_pillar, (Pane) root, newScene, current_pillar, newStage, this,loader,cherry_1); // Start the rotation animation
                     //latch.countDown();
                     System.out.println(test);
 
@@ -505,9 +537,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
             Random random = new Random();
             int width = Math.abs(random.nextInt()) % 50 + 20; // width is random setting as likha tha assignment me
             double height =player.getNode().getY()-50; // yha pr basically uski hieght acc to ninja niklegi wese to yeh ek constant as uska y axis will not change never
-            int distance = Math.abs(random.nextInt()) % 400 + 100;
+            int distance = Math.abs(random.nextInt()) % 100 + 100;
             ahead_pillar = new Pillar(player.getNode().getX()+200, 530, width, height);
-
+            Random rand = new Random();
+            boolean randomBoolean = rand.nextBoolean();
             // Set pillar position at a random distance
             ahead_pillar.getPillar().setX(distance);
             Rectangle rd = new Rectangle(5, 2, Color.RED);
@@ -517,8 +550,15 @@ public class stick_hero extends Thread implements score_interface,cherries,point
             System.out.println(rd.getX());
             ahead_pillar.setRedblock(rd);
 
+            if (randomBoolean){
+                cheery c = new cheery(current_pillar,ahead_pillar,player);
+                cherry_1 = c.getCherry_image();
+            }
             // Add the pillar to the root pane
             ((Pane) root).getChildren().addAll(ahead_pillar.getNode(), ahead_pillar.getRedblock());
+            if (cherry_1!=null){
+                ((Pane) root).getChildren().add(cherry_1);
+            }
             return;
         }
         catch (Exception e){ //thodi error handling
@@ -566,7 +606,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     @Override
     public void viewscore() {
-
+        System.out.println(score);;
     }
 
     @Override
@@ -576,7 +616,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     @Override
     public void increase_score() {
-
+        score++;
     }
 
     @Override

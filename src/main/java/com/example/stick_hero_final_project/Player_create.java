@@ -1,12 +1,11 @@
 package com.example.stick_hero_final_project;
 
 //import com.sun.javafx.tk.TKStage;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -61,7 +60,7 @@ public class Player_create {
         this.playerImageView = playerImageView;
     }
 
-    public void movePlayerOnRotatedStick(stick stick, Player_create player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage, stick_hero sth)  throws InterruptedException {
+    public void movePlayerOnRotatedStick(stick stick, Player_create player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage, stick_hero sth,FXMLLoader curr_loader,ImageView cherry)  throws InterruptedException {
         check_fall_flag = 0;
         double stickAngle = stick.getStick().getRotate(); // Get the current rotation angle of the stick
         double startx = player.getNode().getX();
@@ -80,27 +79,52 @@ public class Player_create {
         System.out.println("Endpoint X: " + endPointX);
         System.out.println("Endpoint Y: " + endPointY);
         System.out.println("Lal"+(pillar1.getPillar().getX()-5));
+        System.out.println("LAL_block"+pillar1.getRedblock().getX());
         System.out.println("Lql"+pillar1.getPillar().getX());
         System.out.println(pillarstartx - pillar1.getPillar().getWidth());
         System.out.println(pillarstartx - pillar1.getWidth());
         System.out.println(pillarstartx);
         System.out.println(pillar1.getPillar().getLayoutX());
+        System.out.println("Height"+pillar1.getHeight());
 
-        // Create a Timeline for the player's movement
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(player.getNode().xProperty(), player.getNode().getX())),
-                new KeyFrame(Duration.seconds((endPointX-startx)/100),
-                        new KeyValue(player.getNode().xProperty(), endPointX),
-                        new KeyValue(player.getNode().yProperty(), endPointY)
-                )
+        Timeline timeline = new Timeline();
+        Timeline timeline78 = new Timeline();
+// Assuming 'startX' and 'startY' are defined somewhere
+        double startX = player.getNode().getX();
+        double startY = player.getNode().getY();
+
+// Create a KeyFrame to check the condition every 0.1 second
+        KeyFrame conditionCheckFrame = new KeyFrame(Duration.seconds(0.0001), event ->boundcheck(cherry));
+// Add the KeyFrame to the Timeline
+        timeline78.getKeyFrames().add(conditionCheckFrame);
+
+// Create KeyFrames for animation
+        KeyFrame endKeyFrame = new KeyFrame(Duration.seconds((endPointX - startX) / 100),
+                new KeyValue(player.getNode().xProperty(), endPointX),
+                new KeyValue(player.getNode().yProperty(), endPointY)
         );
 
-
-        timeline.play(); // Start the timeline animation
+// Add the animation KeyFrame to the Timeline
+        timeline.getKeyFrames().add(endKeyFrame);
+        timeline78.setCycleCount(Animation.INDEFINITE);
+// Play the Timeline
+        timeline78.play();
+        timeline.play();
         //Thread.sleep(200);
         timeline.setOnFinished(actionEvent -> {
+            timeline78.stop();
             CountDownLatch latch = new CountDownLatch(3);
             if (endPointX < pillarstartx - pillar1.getPillar().getWidth() || endPointX > pillarstartx || sth.getPostion_face()==1) {
+
+//                showAlert("+1");
+//                stick_hero controller1  = curr_loader.getController();
+//
+//                Label scoreLabel1 = controller1.getView();
+//                scoreLabel1.setText("GAMEOVER");
+//                scoreLabel1.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+////                Label high_score = controller.high_score_tell;
+////                high_score.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+//                scoreLabel1.setVisible(true);
                 System.out.println(pillarstartx - pillar1.getPillar().getWidth());
                 System.out.println(pillarstartx - pillar1.getWidth());
                 System.out.println(pillarstartx);
@@ -130,13 +154,14 @@ public class Player_create {
                     //newstage.close();
                     FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("Gameover.fxml"));
                     Scene scene = null;
+                    //scoreLabel1.setVisible(false);
 
                     try {
                         Parent root = fxmlLoader.load();
                         scene = new Scene(root, 320, 240);
                         GameOver controller = fxmlLoader.getController();
                         // Access the Label and set its text
-                        Label scoreLabel = controller.score_tell; // Replace 'score_tell' with the actual ID you've given
+                        Label scoreLabel = controller.score_tell;
                         scoreLabel.setText("Your Score "+String.valueOf(sth.getScore_view()));
                         scoreLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
                         Label high_score = controller.high_score_tell;
@@ -172,7 +197,16 @@ public class Player_create {
                     return;
                 });
 
-            } else if (endPointX>=pillar1.getPillar().getX()-5 && endPointX<=pillar1.getPillar().getX()) {
+            } else if (endPointX>=pillar1.getPillar().getX()-5-pillar1.getPillar().getWidth()/2 && endPointX<=pillar1.getPillar().getX()-pillar1.getPillar().getWidth()/2) {
+//                stick_hero controller1  = curr_loader.getController();
+//
+//                Label scoreLabel1 = controller1.getView();
+//                scoreLabel1.setText("PERFECTION");
+//                scoreLabel1.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+////                Label high_score = controller.high_score_tell;
+////                high_score.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+//                scoreLabel1.setVisible(true);
+
                 System.out.println(pillar1.getRedblock().getX());
                 System.out.println(pillar1.getRedblock().getX()-pillar1.getRedblock().getWidth()/2);
                 System.out.println("Perfection");
@@ -201,7 +235,14 @@ public class Player_create {
 
             }
             if (check_fall_flag==0) {
-
+//                stick_hero controller1  = curr_loader.getController();
+//
+//                Label scoreLabel1 = controller1.view;
+//                scoreLabel1.setText("+1");
+//                scoreLabel1.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+////                Label high_score = controller.high_score_tell;
+////                high_score.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+//                scoreLabel1.setVisible(true);
                 // Create a Runnable for player move left
                 Platform.runLater(() -> {
                     // Animation for moving the player to the left
@@ -364,5 +405,27 @@ public class Player_create {
         player.getNode().setX(0);
         player.getNode().setY(500);
     }
+    public void showAlert(String msg) {
+        Platform.runLater(()-> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle(msg);
+            alert.setHeaderText(null);
+            alert.setContentText(msg);
+
+            alert.showAndWait();
+        });
+    }
+    public boolean boundcheck(ImageView cheery_image){
+//        System.out.println("mskmsdsmdskdmsdks");
+        if (cheery_image!=null){
+        boolean collisionDetected = playerImageView.getBoundsInParent().intersects(cheery_image.getBoundsInParent());
+//        System.out.println("mskmsdsmdskdmsdks");
+        if (collisionDetected){
+            System.out.println("halndnskdnadlaskdand");
+        }
+        return collisionDetected;}
+        return false;
+    }
 
 }
+

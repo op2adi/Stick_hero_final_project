@@ -3,7 +3,9 @@ package com.example.stick_hero_final_project;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -40,8 +42,8 @@ public class stick extends Thread {
         this.length = length;
         this.width = width;
         stick = new Rectangle(width, length, Color.BLACK);
-        stick.setLayoutX(x);
-        stick.setLayoutY(y - length);  // Adjust the y position based on the length
+        stick.setX(x);
+        stick.setY(y - length);  // Adjust the y position based on the length
     }
     public stick nr(){
         return new stick(0,0,0,0);
@@ -70,7 +72,7 @@ public class stick extends Thread {
     public void extend(double amount) {
         // Increase the length of the stick and adjust the position
 
-        stick.setLayoutY(stick.getLayoutY() - amount);
+        stick.setY(stick.getY() - amount);
         stick.setHeight(stick.getHeight() + amount);
     }
 
@@ -79,7 +81,7 @@ public class stick extends Thread {
 //        this;
     }
 
-    public void fallHorizontally(stick stick, Player_create player, Pillar pillar, Pane p, Scene newscene, Pillar pillar2, Stage newstage,stick_hero sth) throws InterruptedException {
+    public void fallHorizontally(stick stick, Player_create player, Pillar pillar, Pane p, Scene newscene, Pillar pillar2, Stage newstage, stick_hero sth, FXMLLoader loadei, ImageView cheery) throws InterruptedException {
         p.setDisable(true);
         AtomicBoolean flag_to_check = new AtomicBoolean(false);
         Duration duration = Duration.seconds(0.1); //
@@ -100,7 +102,7 @@ public class stick extends Thread {
         timeline.play();
         timeline.setOnFinished(event -> {
             try {
-                player.movePlayerOnRotatedStick(stick, player, newscene, pillar, pillar2,newstage,sth);
+                player.movePlayerOnRotatedStick(stick, player, newscene, pillar, pillar2,newstage,sth,loadei,cheery);
 
                 latch.countDown();
                 p.setDisable(false);

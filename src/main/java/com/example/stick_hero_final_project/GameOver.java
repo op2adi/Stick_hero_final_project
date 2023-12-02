@@ -3,6 +3,7 @@ package com.example.stick_hero_final_project;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -12,8 +13,11 @@ public class GameOver {
     public Button exit_from_game;
     public Label score_tell;
     public Label high_score_tell;
+    public ImageView restart_image;
+    public ImageView exit_image;
 
     public void Restart(ActionEvent actionEvent) throws IOException {
+
 //        score_tell.setText();
         Stage stage;
         stage = (Stage) restart.getScene().getWindow();

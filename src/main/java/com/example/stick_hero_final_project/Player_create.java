@@ -168,6 +168,8 @@ public class Player_create {
                         scoreLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
                         Label high_score = controller.high_score_tell;
                         high_score.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+                        controller.restart.setStyle("-fx-background-color: #3498db; -fx-text-fill: #ffffff; -fx-padding: 10px 20px; -fx-border-color: transparent; -fx-border-radius: 5px;");
+                        controller.exit_from_game.setStyle("-fx-background-color: #3498db; -fx-text-fill: #ffffff; -fx-padding: 10px 20px; -fx-border-color: transparent; -fx-border-radius: 5px;");
                         int highScore = 0;
                         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("meta_data.txt"))) {
                             Integer previousScore = (Integer) inputStream.readObject();

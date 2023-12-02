@@ -39,7 +39,7 @@
          <children>
             <ImageView fitHeight="32.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:D:\Stick_Hero_Final_Project\src\main\java\com\example\stick_hero_final_project\Images\help.jpeg" />
+                  <Image url="file:D:\Stick_Hero_Final_Project\src\main\java\com\example\stick_hero_final_project\Images\help.png" />
                </image>
             </ImageView>
          </children>

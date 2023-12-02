@@ -17,6 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -216,6 +217,7 @@ public class Player_create {
 //                sth.setView(label);
                 sth.getView().setVisible(true);
                 sth.getView().setText("+1");
+                sth.getView().setTextFill(Color.BLACK);
 //                sth.getView().setVisible(true);
                 Platform.runLater(() -> {
                     sth.getView().setVisible(true);

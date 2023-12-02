@@ -8,18 +8,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
 
 public class HelloController {
-    public Button playButton;
+    public Circle playButton;
     public Button clobutt;
     public ImageView clobutt1;
-    public ImageView playButton1;
+    public Label playButton1;
+    public Circle test;
     @FXML
     private Label welcomeText;
 
@@ -28,7 +31,7 @@ public class HelloController {
         welcomeText.setText("Welcome to Game");
     }
 
-    public void onPlayButtonClick(ActionEvent actionEvent) throws IOException {
+    public void onPlayButtonClick(MouseEvent MouseEvent) throws IOException {
         String button_sound  = "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\button.mp3";
         Media sound_button = new Media(new File(button_sound).toURI().toString());
         MediaPlayer m = new MediaPlayer(sound_button);

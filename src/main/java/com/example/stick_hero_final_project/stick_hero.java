@@ -287,9 +287,9 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     public void setScore_view(int scor) {
-        score_view.setText("Score" + String.valueOf(scor));
+        score_view.setText(String.valueOf(scor));
     }
-
+    private Rectangle layoutforscore;
     private Label score_view;
 
     @FXML
@@ -323,7 +323,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         return adi_flag;
     }
     public void back_create() throws IOException {
-        score_view = new Label("Score"+String.valueOf(score));
+        score_view = new Label(String.valueOf(score));
 
         loader = new FXMLLoader(getClass().getResource("game.fxml"));
         //Parent root = null;
@@ -359,16 +359,21 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 // Set the background for the Pane
         view = new Label();
         backgroundImageView.setFitWidth(600);
+        layoutforscore = new Rectangle(216, 76, 100, 100);
+        layoutforscore.setFill(Color.BLUE); // Set fill color
+        layoutforscore.setStroke(Color.BLACK); // Set stroke color
+
         backgroundImageView.setFitHeight(700);
         score_view.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         ((Pane) root).getChildren().add(backgroundImageView);
+        ((Pane) root).getChildren().add(layoutforscore);
         ((Pane) root).getChildren().add(score_view);
-//        ((Pane) root).getChildren().add(view);
+//        ((Pane) root).getChildren().add(view); //view ko niche lagaya hai
         view.setLayoutX(100);
         view.setLayoutY(300);
         view.setText("hu");
 //        view.setVisible(false);
-        score_view.setLayoutX(100); // Position from the right
+        score_view.setLayoutX(258); // Position from the right
         score_view.setLayoutY(100);
 
 //        initialize1((Pane) root);

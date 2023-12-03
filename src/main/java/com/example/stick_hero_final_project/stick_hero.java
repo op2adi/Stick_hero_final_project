@@ -3,7 +3,6 @@ package com.example.stick_hero_final_project;
 import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,21 +14,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+import javax.swing.*;
 import java.io.*;
-import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.Thread.sleep;
-import static jdk.jfr.internal.Cutoff.INFINITY;
 
 public class stick_hero extends Thread implements score_interface,cherries,points,Serializable{
     public Rectangle rect123;
@@ -47,6 +44,31 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     private int stick_speed_fllag = 0;
     private ImageView cherry_1;
     private String start_of_game_sound= "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\Start_of_Game.mp4";
+    private String stick_grow_sound = "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\stick_grow_loop.wav";
+
+    public Rectangle getRect123() {
+        return rect123;
+    }
+
+    public void setRect123(Rectangle rect123) {
+        this.rect123 = rect123;
+    }
+
+    public String getStick_grow_sound() {
+        return stick_grow_sound;
+    }
+
+    public void setStick_grow_sound(String stick_grow_sound) {
+        this.stick_grow_sound = stick_grow_sound;
+    }
+
+    public Rectangle getLayoutforcherry() {
+        return layoutforcherry;
+    }
+
+    public void setLayoutforcherry(Rectangle layoutforcherry) {
+        this.layoutforcherry = layoutforcherry;
+    }
 
     public String getStart_of_game() {
         return start_of_game_sound;
@@ -83,6 +105,15 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     private Media sound = new Media(new File(start_of_game_sound).toURI().toString());
 
+    public Media getStick_fall_sound() {
+        return stick_fall_sound;
+    }
+
+    public void setStick_fall_sound(Media stick_fall_sound) {
+        this.stick_fall_sound = stick_fall_sound;
+    }
+
+    private Media stick_fall_sound =  new Media(new File(stick_grow_sound).toURI().toString());
     private Player_create player;
     private final int height = 80;
 
@@ -101,7 +132,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public int getWidth() {
         return width;
     }
-
+    public void stick_grow_ka_sound(){
+        MediaPlayer mediaPlayer = new MediaPlayer(this.getStick_fall_sound());
+        mediaPlayer.play();
+    }
     public int getStick_hero_height() {
         return stick_hero_height;
     }
@@ -253,7 +287,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     private final int width = 800;
     private final int stick_hero_height = 50;
-    private int speed = 1;
+    private int speed = 0;
     private Stage newStage = new Stage();
     private int score = 0;
     private Pillar current_pillar;
@@ -428,10 +462,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         view = new Label();
         backgroundImageView.setFitWidth(600);
         layoutforscore = new Rectangle(216, 76, 100, 100);
-        layoutforscore.setFill(Color.BLUE); // Set fill color
+        layoutforscore.setFill(Color.SKYBLUE); // Set fill color
         layoutforscore.setStroke(Color.BLACK); // Set stroke color
         layoutforcherry = new Rectangle(0, 0, 100, 100);
-        layoutforcherry.setFill(Color.BLUE); // Set fill color
+        layoutforcherry.setFill(Color.SKYBLUE); // Set fill color
         layoutforcherry.setStroke(Color.BLACK);
         player.getNode().setTranslateX(0);
         backgroundImageView.setFitHeight(700);
@@ -477,6 +511,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
             ((Pane) root).getChildren().remove(ahead_pillar.getRedblock());
         }
     }
+    AtomicInteger khtm = new AtomicInteger();
+    Timeline timeline1 = new Timeline();
     public void remcherry(){
         if (((Pane) root).getChildren().contains(cherry_1)){
             ((Pane) root).getChildren().remove(cherry_1);
@@ -531,53 +567,100 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //        view.setVisible(false);
 // Create a BackgroundImage
 
-
-
         newScene.addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
-                    System.out.println(click_flag);
-                    try {
-                        latch.await();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    if (click_flag) {
-                        keyIsPressed = true;
-                        double x = event.getSceneX();
-                        double y = event.getSceneY();
+            System.out.println(click_flag);
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            if (click_flag) {
+                keyIsPressed = true;
+                double x = event.getSceneX();
+                double y = event.getSceneY();
 
-                        s = new stick(0, 0, 5, 0);
-                        if (!((Pane) root).getChildren().contains(s.getStick())) {
-                            ((Pane) root).getChildren().add(s.getStick());
-                        }
+                s = new stick(0, 0, 5, 0);
+                if (!((Pane) root).getChildren().contains(s.getStick())) {
+                    ((Pane) root).getChildren().add(s.getStick());
+                }
 
-                        System.out.println("Start and end " + player.getNode().getX() + "    " + player.getNode().getY());
-                        s.getStick().setX(player.getNode().getTranslateX() + (double) 40);
+                System.out.println("Start and end " + player.getNode().getX() + "    " + player.getNode().getY());
+                s.getStick().setX(player.getNode().getTranslateX() + (double) 40);
 
-                        s.getStick().setY(player.getNode().getY() + (double) 30);
-                        AtomicReference<Double> ext = new AtomicReference<>((double) 5);
-                        timeline = new Timeline( //thoda pdhna padega timeline ke baare me
-                                new KeyFrame(Duration.millis(100), e -> {
-                                    if (keyIsPressed && click_flag) {
-                                        s.extend(speed);
+                s.getStick().setY(player.getNode().getY() + (double) 30);
+
+                AtomicReference<Double> ext = new AtomicReference<>((double) 5);
+                speed++;
+                if (timeline1.getStatus() != Animation.Status.STOPPED) {
+                    timeline1.stop(); // Stop the previous timeline if it's not already stopped
+                    timeline1.getKeyFrames().clear(); // Clear existing keyframes
+                }
+                timeline1 = new Timeline( //thoda pdhna padega timeline ke baare me
+
+                        new KeyFrame(Duration.millis(100), e -> {
+                            if (keyIsPressed && click_flag) {
+                                s.extend(10);
+                                stick_grow_ka_sound();
+
+
 //                            latch.countDown();
-                                        ext.updateAndGet(v -> new Double((double) (v * 0.9)));
+                                ext.updateAndGet(v -> new Double((double) (v * 0.9)));
 //                            System.out.println("HI"); Debug statement
-                                    }
-                                })
-                        );
-                        timeline.setCycleCount(timeline.INDEFINITE);
-                        timeline.play();
-                        timeline.setOnFinished(actionEvent -> {
-                            timeline.stop();
-                            timeline.setCycleCount(0);
-                        });
-                    }
+                            }
+                            else {
+                                khtm.set(1);
+                                System.out.println("kopkopkop[]");
+                                //tstop(timeline1);
+                            }
 
-        });
-        newScene.addEventFilter(MouseEvent.MOUSE_MOVED, event -> {
-            double x = event.getSceneX();
-            double y = event.getSceneY();
-            System.out.println("X: " + x + ", Y: " + y);
+                        })
+                );
+//                Timeline timeline89 = new Timeline(
+//                        new KeyFrame(Duration.millis(10), eop ->{
+//                    if (khtm.get()==1){
+//                        System.out.println("dil jeet liya");
+//                        khtm.set(0);
+//                        timeline1.stop();
+//
+//                    }
+//                    else {
+//                        System.out.println("bhao");
+//                    }
+//            })
+//                );
+                //AnimationTimer checkKhtm = new AnimationTimer() {
+//                    @Override
+//                    public void handle(long now) {
+//                        if (khtm.get() == 1) {
+//                            khtm.set(0);
+//                            timeline1.stop();
+//                            System.out.println("chandan boodha");
+//                            stop(); // Stop the AnimationTimer when condition met
+//                        }
+//                    }
+//                };
+//                checkKhtm.start();
+                timeline1.setCycleCount(10000);
+                //timeline89.setCycleCount(timeline.INDEFINITE);
+                timeline1.play();
+                //timeline89.play();
+
+
+                timeline1.setOnFinished(actionEvent -> {
+                    //timeline89.stop();
+                    //timeline89.setCycleCount(1);
+                    timeline1.setCycleCount(0);
+                });
+                newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, evenyt -> {
+                    keyIsPressed = false; // Reset keyIsPressed on mouse release
+                    timeline1.stop();
+                    //timeline89.stop();
+                    timeline1.setCycleCount(0);
+                    //timeline89.setCycleCount(0);
+                });
+            }
+
+
         });
         newScene.setOnKeyPressed(event ->{
             if (event.getCode() == KeyCode.SPACE && !click_flag){

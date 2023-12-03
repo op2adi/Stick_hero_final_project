@@ -94,10 +94,10 @@ public class stick extends Thread {
     public void fallHorizontally(stick stick, Player_create player, Pillar pillar, Pane p, Scene newscene, Pillar pillar2, Stage newstage, stick_hero sth, FXMLLoader loadei, ImageView cheery) throws InterruptedException {
         p.setDisable(true);
         AtomicBoolean flag_to_check = new AtomicBoolean(false);
-        Duration duration = Duration.seconds(0.1); //
+        Duration duration = Duration.seconds(1); //
         Rotate rotate = new Rotate();
         rotate.setPivotX(stick.getStick().getX() + stick.getLength() / 2); // Pivot X at the center of the stick
-        rotate.setPivotY(stick.getStick().getY() + stick.getStick().getHeight()); // Pivot Y at the bottom of the stick
+        rotate.setPivotY(stick.getStick().getY() + stick.getHt()); // Pivot Y at the bottom of the stick
         rotate.setAngle(90); // Rotate the stick from top to bottom (90 degrees)
 //        CountDownLatch latch = new CountDownLatch(1);
         // imp line piche ke transforms ko remove krega

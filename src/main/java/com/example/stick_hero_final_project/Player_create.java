@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,6 +35,7 @@ import java.util.concurrent.CountDownLatch;
 public class Player_create {
     private int check_fall_flag = 0;
     private ImageView playerImageView;
+    private int owl = 1;
 
     public Player_create(double x, double y, double width, double height) {
         // Load the stick hero image
@@ -50,7 +52,7 @@ public class Player_create {
     public int getCheck_fall_flag() {
         return check_fall_flag;
     }
-
+    private boolean Collisiondetected = false;
     public void setCheck_fall_flag(int check_fall_flag) {
         this.check_fall_flag = check_fall_flag;
     }
@@ -93,6 +95,7 @@ public class Player_create {
 
         Timeline timeline = new Timeline();
         Timeline timeline78 = new Timeline();
+        Timeline timeline79 = new Timeline();
 // Assuming 'startX' and 'startY' are defined somewhere
         double startX = 0;
         double startY = player.getNode().getY();
@@ -105,23 +108,39 @@ public class Player_create {
                 throw new RuntimeException(e);
             }
         });
+
+
 // Add the KeyFrame to the Timeline
         timeline78.getKeyFrames().add(conditionCheckFrame);
 
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(2), player.getNode());
         translateTransition.setToX(endPointX-player.getNode().getFitWidth()/2); // Move the player node by endPointX
-
+        KeyFrame conditionCheckFrame2 = new KeyFrame(Duration.seconds(0.0001), event -> {
+            if (Rectangle_collison(pillar1,pillar2,sth)){
+                Collisiondetected = true;
+            };
+            if (Collisiondetected){
+                Collisiondetected = false;
+                //endPointX = 50000;
+                translateTransition.stop();
+                translateTransition.getOnFinished().handle(null);
+            }
+        });
+        timeline79.getKeyFrames().add(conditionCheckFrame2);
         translateTransition.play();
         timeline78.setCycleCount(Animation.INDEFINITE);
+        timeline79.setCycleCount(Animation.INDEFINITE);
 // Play the Timeline
         timeline78.play();
+        timeline79.play();
 //        timeline.play();
         //Thread.sleep(200);
         translateTransition.setOnFinished(actionEvent -> {
             System.out.println("player kaha hai"+player.getNode().getTranslateX());
             timeline78.stop();
+            timeline79.stop();
             CountDownLatch latch = new CountDownLatch(3);
-            if (endPointX < pillarstartx  || endPointX > pillarstartx+pillar1.getPillar().getWidth() || sth.getPostion_face()==1) {
+            if (endPointX < pillarstartx  || endPointX > pillarstartx+pillar1.getPillar().getWidth() || sth.getPostion_face()==1 || Collisiondetected) {
 
 //                showAlert("+1");
 //                stick_hero controller1  = curr_loader.getController();
@@ -136,15 +155,27 @@ public class Player_create {
                 System.out.println(pillarstartx - pillar1.getWidth());
                 System.out.println(pillarstartx);
                 check_fall_flag = 1;
-
-
-
+                Rotate rotate = new Rotate();
+                rotate.setPivotX(stick.getStick().getX() + stick.getLength() / 2); // Pivot X at the center of the stick
+                rotate.setPivotY(stick.getStick().getY() + stick.getStick().getHeight()); // Pivot Y at the bottom of the stick
+                rotate.setAngle(180);
+                stick.getStick().getTransforms().clear();
+                stick.getStick().getTransforms().add(rotate);
+                //CountDownLatch latch = new CountDownLatch(1);
+                // Create a Timeline for the rotation
+                Duration duration = Duration.seconds(1);
+                Timeline timeline67 = new Timeline(
+                        new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), 90)), // Start angle
+                        new KeyFrame(duration, new KeyValue(rotate.angleProperty(), 180)) // End angle and duration
+                );
+                timeline67.play();
                 //player.getNode().setY(10000); debug
 
                 // Creating a TranslateTransition for the player
                 TranslateTransition playerTransition = new TranslateTransition(Duration.seconds(1), player.getNode());
                 playerTransition.setByY(600); // Move the player's node by 600 game over
                 // Setting up a timeline to control the transition
+
                 Timeline timeline1 = new Timeline(
                         new KeyFrame(Duration.ZERO, new KeyValue(player.getNode().opacityProperty(), 1.0)),
                         new KeyFrame(Duration.seconds(1), new KeyValue(player.getNode().opacityProperty(), 0.5)),
@@ -325,11 +356,13 @@ public class Player_create {
                         System.out.println("HUHHUSDSDSDSD");
 
                         //Thread.sleep(1000);
-                        if (sth.getSpeed() > 2.5 || sth.getStick_speed_fllag() > 2) {
-                            sth.setStick_speed_fllag(0);
-                            sth.setSpeed(sth.getSpeed() / 2);
-                        }
-                        sth.setStick_speed_fllag(sth.getStick_speed_fllag() + 1);
+//                        if (sth.getSpeed() > 2.5 || sth.getStick_speed_fllag() > 2) {
+//                            sth.setStick_speed_fllag(0);
+//                            sth.setSpeed(sth.getSpeed() / 2);
+//                        }
+                        //sth.setStick_speed_fllag(sth.getStick_speed_fllag() + 1);
+                        owl++;
+                        sth.setSpeed(sth.getSpeed()/owl);
                         sth.setScore(sth.getScore() + 1);
                         sth.setPostion_face(0);
                         File metaDataFile = new File("meta_data.txt");
@@ -470,6 +503,14 @@ public class Player_create {
         }
         return collisionDetected;}
         return false;
+    }
+    public boolean Rectangle_collison(Pillar q,Pillar p,stick_hero sth){
+        if (sth.getPostion_face()==1){
+        boolean collisonDetected = (playerImageView.getBoundsInParent().intersects(p.getPillar().getBoundsInParent()) || playerImageView.getBoundsInParent().intersects(q.getPillar().getBoundsInParent()));
+        return collisonDetected;
+        }
+        return false;
+
     }
     public void cherry_set(){
 

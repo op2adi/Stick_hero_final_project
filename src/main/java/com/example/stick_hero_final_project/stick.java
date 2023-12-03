@@ -112,7 +112,7 @@ public class stick extends Thread {
         timeline.play();
         timeline.setOnFinished(event -> {
             try {
-                player.movePlayerOnRotatedStick(stick, player, newscene, pillar, pillar2,newstage,sth,loadei,cheery);
+                player.movePlayerOnRotatedStick(stick, player, newscene, pillar, pillar2,newstage,sth,loadei,cheery,p);
 
                 latch.countDown();
                 p.setDisable(false);

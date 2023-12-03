@@ -20,18 +20,20 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import java.io.File;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.Collections;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.io.Serializable;
 
 import static java.lang.Thread.sleep;
+import static jdk.jfr.internal.Cutoff.INFINITY;
 
 public class stick_hero extends Thread implements score_interface,cherries,points,Serializable{
+    public Rectangle rect123;
+
     public int getStick_speed_fllag() {
         return stick_speed_fllag;
     }
@@ -52,7 +54,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     private CountDownLatch latch = new CountDownLatch(0);
     private Scene newScene;
     stick s = new stick(10, 10, 5, 0);
-
+    int brahmastra = 0; //to move synchronous
     public void setStart_of_game(String start_of_game_sound) {
         this.start_of_game_sound = start_of_game_sound;
     }
@@ -279,8 +281,34 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     private boolean keyIsPressed = false;
     private Parent root;
     private boolean click_flag = true; // will make it True once key is pressed
+    private Rectangle layoutforcherry;
     @FXML
     private Label welcomeText;
+    private Pillar ahead_pillar1;
+
+    public ImageView getCherry_1() {
+        return cherry_1;
+    }
+
+    public void setCherry_1(ImageView cherry_1) {
+        this.cherry_1 = cherry_1;
+    }
+
+    public Pillar getAhead_pillar1() {
+        return ahead_pillar1;
+    }
+
+    public void setAhead_pillar1(Pillar ahead_pillar1) {
+        this.ahead_pillar1 = ahead_pillar1;
+    }
+
+    public Rectangle getLayoutforscore() {
+        return layoutforscore;
+    }
+
+    public void setLayoutforscore(Rectangle layoutforscore) {
+        this.layoutforscore = layoutforscore;
+    }
 
     public int getScore_view() {
         return score;
@@ -297,7 +325,28 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         welcomeText.setText("Welcome to Game");
     }
     private FXMLLoader loader;
-    public Label view;
+
+    public int getBrahmastra() {
+        return brahmastra;
+    }
+
+    public void setBrahmastra(int brahmastra) {
+        this.brahmastra = brahmastra;
+    }
+    @FXML
+    private Label view;
+
+    public Label getCherryscore() {
+        return cherryscore;
+    }
+
+    public void setCherryscore(Label cherryscore) {
+        this.cherryscore = cherryscore;
+    }
+
+    @FXML
+    private Label cherryscore;
+
 
     public void setScore_view(Label score_view) {
         this.score_view = score_view;
@@ -323,8 +372,26 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         return adi_flag;
     }
     public void back_create() throws IOException {
+        brahmastra = 0;
         score_view = new Label(String.valueOf(score));
-
+        cherryscore = new Label(" ");
+        try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("cherry_data.txt"))) {
+            Integer chr = (Integer) inputStream.readObject();
+            if (chr != null) {
+                cherryscore.setText(String.valueOf(chr));
+                cherries = chr;
+            } else {
+                System.out.println("Invalid data found in the file.");
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found. No high score recorded yet.");
+            cherryscore.setText(String.valueOf(0));
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e){
+            cherryscore.setText(String.valueOf(0));
+        }
         loader = new FXMLLoader(getClass().getResource("game.fxml"));
         //Parent root = null;
         try {
@@ -352,6 +419,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT
         );
+//        todo();
         Background backgroundWithImage = new Background(background);
         ImageView backgroundImageView = new ImageView(backgroundImage);
         System.out.println(srt); //debug statement for background
@@ -362,14 +430,32 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         layoutforscore = new Rectangle(216, 76, 100, 100);
         layoutforscore.setFill(Color.BLUE); // Set fill color
         layoutforscore.setStroke(Color.BLACK); // Set stroke color
-
+        layoutforcherry = new Rectangle(0, 0, 100, 100);
+        layoutforcherry.setFill(Color.BLUE); // Set fill color
+        layoutforcherry.setStroke(Color.BLACK);
+        player.getNode().setTranslateX(0);
         backgroundImageView.setFitHeight(700);
         score_view.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         ((Pane) root).getChildren().add(backgroundImageView);
         ((Pane) root).getChildren().add(layoutforscore);
         ((Pane) root).getChildren().add(score_view);
+        FileInputStream inputStream = new FileInputStream("D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Images\\cherry.png");
+        Image image = new Image(inputStream);
+        ImageView imageView = new ImageView();
+        // Setting the image to the ImageView
+        imageView.setImage(image);
+        imageView.setX(0);
+        imageView.setY(0);
+        imageView.setFitHeight(50);
+        imageView.setFitWidth(50);
 //        ((Pane) root).getChildren().add(view); //view ko niche lagaya hai
         view.setLayoutX(100);
+        cherryscore.setLayoutX(60);
+        cherryscore.setLayoutY(15);
+        ((Pane) root).getChildren().add(layoutforcherry);
+        ((Pane) root).getChildren().add(imageView);
+        ((Pane) root).getChildren().add(cherryscore);
+        cherryscore.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
         view.setLayoutY(300);
         view.setText("hu");
 //        view.setVisible(false);
@@ -386,7 +472,17 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //        while (newScene==null){}
         init();
     }
-
+    public void rem(){
+        if (ahead_pillar!=null && ((Pane) root).getChildren().contains(ahead_pillar.getRedblock())){
+            ((Pane) root).getChildren().remove(ahead_pillar.getRedblock());
+        }
+    }
+    public void remcherry(){
+        if (((Pane) root).getChildren().contains(cherry_1)){
+            ((Pane) root).getChildren().remove(cherry_1);
+            cherry_1 = null;
+        }
+    }
     public int getPostion_face() {
         return postion_face;
     }
@@ -396,9 +492,13 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     public void init() throws IOException {
-        if (((Pane) root).getChildren().contains(cherry_1)){
-            ((Pane) root).getChildren().remove(cherry_1);
-        }
+//        player.getNode().setX(0);
+//        player.getNode().setY(500);
+//        if (((Pane) root).getChildren().contains(cherry_1)){
+//            ((Pane) root).getChildren().remove(cherry_1);
+//        }
+//        player.getNode().setX(0);
+//        player.getNode().setY(500);
         cherry_1 =null;
 //        view.setVisible(false);
         setScore_view(score);
@@ -407,11 +507,14 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         view.setLayoutY(300);
         setClick_flag(true);
         keyIsPressed = true;
-        if (ahead_pillar!=null && ((Pane) root).getChildren().contains(ahead_pillar.getRedblock())){
-            ((Pane) root).getChildren().remove(ahead_pillar.getRedblock());
-        }
-        current_pillar = getAhead_pillar();
-        createRandomPillar((Pane) root);
+//        if (ahead_pillar!=null && ((Pane) root).getChildren().contains(ahead_pillar.getRedblock())){
+//            ((Pane) root).getChildren().remove(ahead_pillar.getRedblock());
+//        }
+//        ahead_pillar = getAhead_pillar1();
+        if (brahmastra==0){
+            current_pillar = getAhead_pillar();
+        createRandomPillar((Pane) root);}
+//        createRandomPillar2((Pane) root);
         view.setLayoutX(ahead_pillar.getPillar().getX()+ahead_pillar.getPillar().getWidth()/2);
         view.setLayoutY(480);
         view.setStyle("-fx-font-size: 20;");
@@ -448,7 +551,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                         }
 
                         System.out.println("Start and end " + player.getNode().getX() + "    " + player.getNode().getY());
-                        s.getStick().setX(player.getNode().getX() + (double) 40);
+                        s.getStick().setX(player.getNode().getTranslateX() + (double) 40);
+
                         s.getStick().setY(player.getNode().getY() + (double) 30);
                         AtomicReference<Double> ext = new AtomicReference<>((double) 5);
                         timeline = new Timeline( //thoda pdhna padega timeline ke baare me
@@ -547,8 +651,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
 
         //Yha pr pillar ko dalna hai
+
         if (adi_flag==100){
             createmainPillar((Pane) root);
+//            createRandomPillar((Pane) root);
             adi_flag=101; // setting this so also not providing any setter function such that by any chance it cant re do and edit this intentionally not providing setter
         }
     }
@@ -560,40 +666,157 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
     public void createRandomPillar(Pane root) {
         try {
+            if (brahmastra == 1) {
+                click_flag = false;
+                Random random = new Random();
+                int width = Math.abs(random.nextInt()) % 50 + 40;
+                double height = player.getNode().getY() - 50;
+                int distance = Math.abs(random.nextInt()) % 300 + 100;
 
+                ahead_pillar = new Pillar(player.getNode().getX() + 200, 530, width, height);
+                Rectangle rd = new Rectangle(5, 2, Color.RED);
+                rd.setY(ahead_pillar.getPillar().getY());
+                rd.setFill(Color.RED);
+                System.out.println("LOPLOP" + distance);
+                ahead_pillar.getPillar().setX(500);
+                rd.setX(500 + width / 2);
+                ahead_pillar.setRedblock(rd);
+
+                // Start the pillar off-screen to the right
+//                rem();
+                if (((Pane)root).getChildren().contains(ahead_pillar.getPillar())){
+                    root.getChildren().remove(ahead_pillar.getPillar());
+                }
+                root.getChildren().addAll(ahead_pillar.getNode(), ahead_pillar.getRedblock());
+                Timeline timeline = new Timeline();
+
+                // Create KeyValue to gradually change the x position of the rectangle
+                KeyValue keyValue = new KeyValue(ahead_pillar.getPillar().xProperty(), distance);
+                KeyValue keyValue2 = new KeyValue(rd.xProperty(), distance + width / 2);
+                KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), keyValue, keyValue2);
+
+                timeline.getKeyFrames().add(keyFrame);
+                timeline.play();
+                remcherry();
+
+                // First TranslateTransition: Move infinitely to the right
+//            TranslateTransition translateTransition1 = new TranslateTransition(Duration.seconds(0.01), ahead_pillar.getPillar());
+//            translateTransition1.setToX(50);
+//            translateTransition1.play();
+//            translateTransition1.setOnFinished(ert ->{
+//                TranslateTransition translateTransition2 = new TranslateTransition(Duration.seconds(1), ahead_pillar.getPillar());
+//                translateTransition2.setToX(5);
+//                translateTransition1.setOnFinished(eve -> translateTransition2.play());
+//            });
+                // Second TranslateTransition: Bring it back to the desired distance
+                timeline.setOnFinished(ert -> {
+
+                    click_flag = true;
+                    System.out.println("kopkop" + ahead_pillar.getPillar().getX());
+                    Random rand = new Random();
+                    boolean randomBoolean = rand.nextBoolean();
+                    if (randomBoolean){
+                        if (cherry_1==null){
+                            cheery c = new cheery(current_pillar,ahead_pillar,player);
+                            cherry_1 = c.getCherry_image();
+                        }
+                        //cherry_1 = c.getCherry_image();
+                        cherry_1.setX(distance/2);
+
+                        System.out.println("cherryu coordinates "+cherry_1.getX());
+
+                    }
+//                    remcherry();
+                    if (cherry_1!=null && !((Pane)root).getChildren().contains(cherry_1)){
+                        ((Pane) root).getChildren().add(cherry_1);
+                    }
+//                    System.out.println("cherryu coordinates "+cherry_1.getX());
+
+
+                    return;
+                });
+
+            }
+            else {
+                Random random = new Random();
+                int width = Math.abs(random.nextInt()) % 50 + 20;
+                double height = player.getNode().getY() - 50;
+                int distance = Math.abs(random.nextInt()) % 300 + 100;
+
+                ahead_pillar = new Pillar(player.getNode().getX() + 200, 530, width, height);
+                Rectangle rd = new Rectangle(5, 2, Color.RED);
+                rd.setY(ahead_pillar.getPillar().getY());
+                rd.setFill(Color.RED);
+                System.out.println("LOPLOP" + distance);
+                ahead_pillar.getPillar().setX(distance);
+                rd.setX(distance + width / 2);
+                ahead_pillar.setRedblock(rd);
+
+                // Start the pillar off-screen to the right
+
+
+                root.getChildren().addAll(ahead_pillar.getNode(), ahead_pillar.getRedblock());
+                brahmastra++;
+                Random rand = new Random();
+                boolean randomBoolean = rand.nextBoolean();
+                if (randomBoolean){
+                    cheery c = new cheery(current_pillar,ahead_pillar,player);
+                    cherry_1 = c.getCherry_image();
+                }
+                if (cherry_1!=null){
+                    ((Pane) root).getChildren().add(cherry_1);
+                }
+            }
+        } catch(Exception e){
+                System.out.println("HI");
+                e.printStackTrace();
+                System.exit(-1);
+            }
+
+    }
+
+
+
+    public void createRandomPillar2(Pane root) {
+        try {
+//            click_flag=false;
             Random random = new Random();
             int width = Math.abs(random.nextInt()) % 50 + 20; // width is random setting as likha tha assignment me
             double height =player.getNode().getY()-50; // yha pr basically uski hieght acc to ninja niklegi wese to yeh ek constant as uska y axis will not change never
             int distance = Math.abs(random.nextInt()) % 100 + 100;
-            ahead_pillar = new Pillar(player.getNode().getX()+200, 530, width, height);
+            ahead_pillar1 = new Pillar(player.getNode().getX()+200+100, 530, width, height);
             Random rand = new Random();
             boolean randomBoolean = rand.nextBoolean();
             // Set pillar position at a random distance
-            ahead_pillar.getPillar().setX(distance);
+            ahead_pillar1.getPillar().setX(distance);
             Rectangle rd = new Rectangle(5, 2, Color.RED);
-            rd.setY(ahead_pillar.getPillar().getY());
+            rd.setY(ahead_pillar1.getPillar().getY());
             rd.setFill(Color.RED);
-            rd.setX((ahead_pillar.getPillar().getX()+width/2));
+            rd.setX((ahead_pillar1.getPillar().getX()+width/2));
             System.out.println(rd.getX());
-            ahead_pillar.setRedblock(rd);
+            ahead_pillar1.setRedblock(rd);
+//            ahead_pillar1.getPillar().setVisible(false);
+
 
             if (randomBoolean){
-                cheery c = new cheery(current_pillar,ahead_pillar,player);
+                cheery c = new cheery(current_pillar,ahead_pillar1,player);
                 cherry_1 = c.getCherry_image();
             }
             // Add the pillar to the root pane
-            ((Pane) root).getChildren().addAll(ahead_pillar.getNode(), ahead_pillar.getRedblock());
+            ((Pane) root).getChildren().addAll(ahead_pillar1.getNode(), ahead_pillar1.getRedblock());
             if (cherry_1!=null){
                 ((Pane) root).getChildren().add(cherry_1);
             }
             return;
         }
+
         catch (Exception e){ //thodi error handling
             System.out.println("HI");
             e.printStackTrace();
             System.exit(-1);
         }
     }
+
         public Node cr_pl_get_nd(){
         return (new Player_create(0,0,0,0)).getNode();
     }
@@ -638,7 +861,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     @Override
     public void setscore() {
-
+        score++;
     }
 
     @Override
@@ -652,22 +875,26 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     @Override
-    public void inc_cherries() {
-
+    public void inc_cherries() throws InterruptedException {
+        if (cherry_1!=null) {
+//            Thread.sleep(10);
+            cherryscore.setText(String.valueOf(cherries + 1));
+            cherries++;
+        }
     }
 
     @Override
     public void view_cherries() {
-
+        System.out.println(cherries);
     }
 
     @Override
     public void revive_cherries() {
-
+        cherries-=5;
     }
     @Override
     public void display() {
-
+        System.out.println("hi");
     }
 
     @Override

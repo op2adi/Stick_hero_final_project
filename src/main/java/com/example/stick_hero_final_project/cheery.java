@@ -30,13 +30,15 @@ public class cheery {
             minX = 60;
         }
         double maxX = p2.getPillar().getX();
+        System.out.println("Max min "+minX+" "+p2.getPillar().getTranslateX());
         Image cherry = new Image("D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Images\\cherry.png") ;
         cherry_image = new ImageView(cherry);
         cherry_image.setFitWidth(30);
         cherry_image.setFitHeight(30);
         Random random = new Random();
-        double randomX = minX -50;
+        double randomX = (minX + maxX)/2;
         cherry_image.setX(randomX);
+        System.out.println("vhhv"+cherry_image.getX());
         boolean dirn = random.nextBoolean();
         if (dirn){
             cherry_image.setY(500+player.getNode().getFitHeight()+5);

@@ -163,7 +163,7 @@ public class Player_create {
                 stick.getStick().getTransforms().add(rotate);
                 //CountDownLatch latch = new CountDownLatch(1);
                 // Create a Timeline for the rotation
-                Duration duration = Duration.seconds(1);
+                Duration duration = Duration.seconds(0.1);
                 Timeline timeline67 = new Timeline(
                         new KeyFrame(Duration.ZERO, new KeyValue(rotate.angleProperty(), 90)), // Start angle
                         new KeyFrame(duration, new KeyValue(rotate.angleProperty(), 180)) // End angle and duration
@@ -328,7 +328,7 @@ public class Player_create {
 //                    pillar1Transition.play();
                 //Animation for moving the stick to the left
                 TranslateTransition stickTransition = new TranslateTransition(Duration.seconds(1), stick.getStick());
-                stickTransition.setByX(-100000);
+                stickTransition.setByX(-player.getNode().getTranslateX()-2);
 
 
 //                    stickTransition.play();

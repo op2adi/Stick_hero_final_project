@@ -512,7 +512,30 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         }
     }
     AtomicInteger khtm = new AtomicInteger();
-    Timeline timeline1 = new Timeline();
+    Timeline timeline1 = timeline1 = new Timeline( //thoda pdhna padega timeline ke baare me
+
+            new KeyFrame(Duration.millis(100), e -> {
+                if (keyIsPressed && click_flag) {
+                    s.extend(10);
+                    stick_grow_ka_sound();
+//                            latch.countDown();
+                    //ext.updateAndGet(v -> new Double((double) (v * 0.9)));
+//                            System.out.println("HI"); Debug statement
+                }
+                else {
+                    khtm.set(1);
+                    System.out.println("kopkopkop[]");
+                    tstop();
+                }
+
+            })
+    );
+
+    private void tstop() {
+        timeline1.stop();
+        System.out.println("yeh");
+    }
+
     public void remcherry(){
         if (((Pane) root).getChildren().contains(cherry_1)){
             ((Pane) root).getChildren().remove(cherry_1);
@@ -591,30 +614,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
                 AtomicReference<Double> ext = new AtomicReference<>((double) 5);
                 speed++;
-                if (timeline1.getStatus() != Animation.Status.STOPPED) {
-                    timeline1.stop(); // Stop the previous timeline if it's not already stopped
-                    timeline1.getKeyFrames().clear(); // Clear existing keyframes
-                }
-                timeline1 = new Timeline( //thoda pdhna padega timeline ke baare me
+//                if (timeline1.getStatus() != Animation.Status.STOPPED) {
+//                    timeline1.stop(); // Stop the previous timeline if it's not already stopped
+//                    //timeline1.getKeyFrames().clear(); // Clear existing keyframes
+//                }
 
-                        new KeyFrame(Duration.millis(100), e -> {
-                            if (keyIsPressed && click_flag) {
-                                s.extend(10);
-                                stick_grow_ka_sound();
-
-
-//                            latch.countDown();
-                                ext.updateAndGet(v -> new Double((double) (v * 0.9)));
-//                            System.out.println("HI"); Debug statement
-                            }
-                            else {
-                                khtm.set(1);
-                                System.out.println("kopkopkop[]");
-                                //tstop(timeline1);
-                            }
-
-                        })
-                );
 //                Timeline timeline89 = new Timeline(
 //                        new KeyFrame(Duration.millis(10), eop ->{
 //                    if (khtm.get()==1){
@@ -640,9 +644,12 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //                    }
 //                };
 //                checkKhtm.start();
-                timeline1.setCycleCount(10000);
-                //timeline89.setCycleCount(timeline.INDEFINITE);
-                timeline1.play();
+//                timeline1.setCycleCount(10000);
+                timeline1.setCycleCount(timeline.INDEFINITE);
+                if (keyIsPressed && click_flag) {
+                    System.out.println("bhao bhao chandan");
+                    timeline1.play();
+                }
                 //timeline89.play();
 
 

@@ -1,5 +1,6 @@
 package com.example.stick_hero_final_project;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -41,5 +42,6 @@ public class GameOver {
             stage = (Stage) exit_image.getScene().getWindow();
         }
         stage.close();
+        Platform.exit();
     }
 }

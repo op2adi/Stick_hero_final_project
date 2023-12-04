@@ -1,6 +1,7 @@
 package com.example.stick_hero_final_project;
 
 import javafx.animation.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -533,6 +534,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     private void tstop() {
         timeline1.stop();
+
+        System.gc();
         System.out.println("yeh");
     }
 
@@ -646,10 +649,21 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //                checkKhtm.start();
 //                timeline1.setCycleCount(10000);
                 timeline1.setCycleCount(timeline.INDEFINITE);
-                if (keyIsPressed && click_flag) {
-                    System.out.println("bhao bhao chandan");
-                    timeline1.play();
-                }
+                Runnable indefiniteExecution = () -> {
+                    while (keyIsPressed && click_flag) {
+                        System.out.println("bhao bhao chandan");
+                        timeline1.play();
+                        try {
+                            Thread.currentThread().sleep(10);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                    }
+                };
+
+                Thread indefiniteThread = new Thread(indefiniteExecution);
+                indefiniteThread.start();
                 //timeline89.play();
 
 
@@ -661,8 +675,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, evenyt -> {
                     keyIsPressed = false; // Reset keyIsPressed on mouse release
                     timeline1.stop();
+
+                    //indefiniteThread.interrupt();
+                    //System.gc();
                     //timeline89.stop();
-                    timeline1.setCycleCount(0);
+                    //timeline1.setCycleCount(0);
                     //timeline89.setCycleCount(0);
                 });
             }

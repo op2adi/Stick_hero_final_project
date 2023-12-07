@@ -162,6 +162,7 @@ public class Player_create {
             timeline78.stop();
             timeline79.stop();
             timeline80.stop();
+            cherry_set(sth);
             CountDownLatch latch = new CountDownLatch(3);
             if (endPointX < pillarstartx  || endPointX > pillarstartx+pillar1.getPillar().getWidth() || sth.getPostion_face()==1 || Collisiondetected) {
 
@@ -529,7 +530,7 @@ public class Player_create {
         if (collisionDetected){
             sth.inc_cherries();
             sth.remcherry();
-            cherry_set(sth);
+
 //            System.out.println("halndnskdnadlaskdand");
         }
         return collisionDetected;}
@@ -544,13 +545,16 @@ public class Player_create {
 
     }
     public void cherry_set(stick_hero sth){
-        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("cherry_data.txt"))) {
-            outputStream.writeObject(sth.getCherries());
-            System.out.println("Done");
-            //outputStream.writeObject(sth.getCherries());
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
+        Platform.runLater(()->{
+            try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("cherry_data.txt"))) {
+                outputStream.writeObject(sth.getCherries());
+                System.out.println("Done");
+                //outputStream.writeObject(sth.getCherries());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        });
+
     }
 }
 

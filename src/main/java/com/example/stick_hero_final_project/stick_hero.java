@@ -382,8 +382,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
     @FXML
     private Label cherryscore;
-
-
+//    timeline1;
     public void setScore_view(Label score_view) {
         this.score_view = score_view;
     }
@@ -403,11 +402,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public void setView(Label view) {
         this.view = view;
     }
-
     public int getAdi_flag() {
         return adi_flag;
     }
     public void back_create() throws IOException {
+        timeline1.setCycleCount(-1);
         brahmastra = 0;
         score_view = new Label(String.valueOf(score));
         cherryscore = new Label(" ");
@@ -564,6 +563,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     public void init() throws IOException {
+        System.gc();
         newStage.setOnCloseRequest(event -> {
             // Handle the close request here
             System.out.println("Close button pressed");
@@ -664,10 +664,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //                };
 //                checkKhtm.start();
 //                timeline1.setCycleCount(10000);
-                timeline1.setCycleCount(timeline.INDEFINITE);
+                //
                 Runnable indefiniteExecution = () -> {
                     while (keyIsPressed && click_flag) {
-                        System.out.println("bhao bhao chandan");
+                        System.out.println("");
                         timeline1.play();
                         try {
                             Thread.currentThread().sleep(10);
@@ -684,9 +684,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
 
                 timeline1.setOnFinished(actionEvent -> {
+                    //timeline1.stop();
                     //timeline89.stop();
                     //timeline89.setCycleCount(1);
-                    timeline1.setCycleCount(0);
+                    //timeline1.setCycleCount(0);
                 });
                 newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, evenyt -> {
                     keyIsPressed = false; // Reset keyIsPressed on mouse release
@@ -840,11 +841,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 // Second TranslateTransition: Bring it back to the desired distance
                 timeline.setOnFinished(ert -> {
 
-                    click_flag = true;
+                    //click_flag = true;
                     System.out.println("kopkop" + ahead_pillar.getPillar().getX());
                     Random rand = new Random();
                     boolean randomBoolean = rand.nextBoolean();
-                    if (randomBoolean && distance>50){
+                    if (randomBoolean && distance>130){
                         if (cherry_1==null){
                             cheery c = new cheery(current_pillar,ahead_pillar,player);
                             cherry_1 = c.getCherry_image();
@@ -888,7 +889,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 brahmastra++;
                 Random rand = new Random();
                 boolean randomBoolean = rand.nextBoolean();
-                if (randomBoolean && distance>50){
+                if (randomBoolean && distance>130){
                     cheery c = new cheery(current_pillar,ahead_pillar,player);
                     cherry_1 = c.getCherry_image();
                 }

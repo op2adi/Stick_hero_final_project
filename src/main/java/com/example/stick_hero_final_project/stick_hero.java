@@ -525,7 +525,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     AtomicInteger khtm = new AtomicInteger();
     Timeline timeline1 = timeline1 = new Timeline( //thoda pdhna padega timeline ke baare me
 
-            new KeyFrame(Duration.millis(100), e -> {
+            new KeyFrame(Duration.millis(80), e -> {
                 if (keyIsPressed && click_flag) {
                     s.extend(10);
                     stick_grow_ka_sound();
@@ -844,7 +844,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                     System.out.println("kopkop" + ahead_pillar.getPillar().getX());
                     Random rand = new Random();
                     boolean randomBoolean = rand.nextBoolean();
-                    if (randomBoolean && width>50){
+                    if (randomBoolean && distance>50){
                         if (cherry_1==null){
                             cheery c = new cheery(current_pillar,ahead_pillar,player);
                             cherry_1 = c.getCherry_image();
@@ -888,7 +888,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 brahmastra++;
                 Random rand = new Random();
                 boolean randomBoolean = rand.nextBoolean();
-                if (randomBoolean && width>50){
+                if (randomBoolean && distance>50){
                     cheery c = new cheery(current_pillar,ahead_pillar,player);
                     cherry_1 = c.getCherry_image();
                 }

@@ -28,6 +28,12 @@ public class GameOver {
         } else {
             stage = (Stage) restart_image.getScene().getWindow();
         }
+        stage.setOnCloseRequest(event -> {
+            // Handle the close request here
+            System.out.println("Close button pressed");
+            // You can perform any cleanup or other actions here before exiting
+            Platform.exit(); // Exit the application
+        });
         stage.close();
 
     stick_hero pop = new stick_hero(new Player_create(0, 0, 0, 0), 10, 0, 100, 30, 0, false, true, new Label("HI"));

@@ -7,12 +7,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -111,6 +114,10 @@ public class stick extends Thread {
         );
         timeline.play();
         timeline.setOnFinished(event -> {
+            String Stickfallsound = "src/main/resources/com/example/stick_hero_final_project/Sounds/stick_fallen.wav";
+            Media stick_fall_sound =  new Media(new File(Stickfallsound).toURI().toString());
+            MediaPlayer m = new MediaPlayer(stick_fall_sound);
+            m.play();
             try {
                 player.movePlayerOnRotatedStick(stick, player, newscene, pillar, pillar2,newstage,sth,loadei,cheery,p);
 

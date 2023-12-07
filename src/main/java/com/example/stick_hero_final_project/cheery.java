@@ -3,6 +3,8 @@ package com.example.stick_hero_final_project;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 public class cheery {
@@ -31,7 +33,14 @@ public class cheery {
         }
         double maxX = p2.getPillar().getX();
         System.out.println("Max min "+minX+" "+p2.getPillar().getTranslateX());
-        Image cherry = new Image("D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Images\\cherry.png") ;
+        String cherr = "src/main/resources/com/example/stick_hero_final_project/Images/cherry.png";
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(cherr);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Image cherry = new Image(inputStream) ;
         cherry_image = new ImageView(cherry);
         cherry_image.setFitWidth(30);
         cherry_image.setFitHeight(30);

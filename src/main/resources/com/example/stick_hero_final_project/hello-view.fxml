@@ -13,14 +13,14 @@
    <children>
       <ImageView fitHeight="700.0" fitWidth="600.0">
          <image>
-            <Image url="file:D:/Stick_Hero_Final_Project/src/main/java/com/example/stick_hero_final_project/Images/gamestartscrreen.jpeg" />
+            <Image url="@Images/gamestartscrreen.jpeg" />
          </image>
       </ImageView>
       <Button fx:id="clobutt" layoutX="441.0" layoutY="600.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#closebutton" prefHeight="40.0" prefWidth="50.0">
          <graphic>
             <ImageView fx:id="clobutt1" fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:D:/Stick_Hero_Final_Project/src/main/java/com/example/stick_hero_final_project/Images/close.jpeg" />
+                  <Image url="@Images/close.jpeg" />
                </image>
             </ImageView>
          </graphic>
@@ -39,7 +39,7 @@
          <children>
             <ImageView fitHeight="32.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="file:D:\Stick_Hero_Final_Project\src\main\java\com\example\stick_hero_final_project\Images\help.png" />
+                  <Image url="@Images/help.png" />
                </image>
             </ImageView>
          </children>

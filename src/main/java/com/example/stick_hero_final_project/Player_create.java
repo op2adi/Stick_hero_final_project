@@ -18,6 +18,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Popup;
@@ -36,11 +38,24 @@ public class Player_create {
     private int check_fall_flag = 0;
     private ImageView playerImageView;
     private int owl = 1;
-
+    public void Walk(){
+        String button_sound  = "src/main/resources/com/example/stick_hero_final_project/Sounds/kick.wav";
+        Media sound_button = new Media(new File(button_sound).toURI().toString());
+        MediaPlayer m = new MediaPlayer(sound_button);
+        m.setVolume(1);
+        m.play();
+    }
     public Player_create(double x, double y, double width, double height) {
         // Load the stick hero image
-        Image playerImage = new Image("D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Images\\stick_hero_main-removebg-preview.png");
-
+        String imageUrl = ("src/main/resources/com/example/stick_hero_final_project/Images/stick_hero_main-removebg-preview.png");
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(imageUrl);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Image playerImage = new Image(inputStream);
+        //ImageView imageView = new ImageView();
         // Create an ImageView with the stick hero image
         playerImageView = new ImageView(playerImage);
         playerImageView.setX(x);
@@ -95,6 +110,7 @@ public class Player_create {
 
         Timeline timeline = new Timeline();
         Timeline timeline78 = new Timeline();
+        Timeline timeline80 = new Timeline();
         Timeline timeline79 = new Timeline();
 // Assuming 'startX' and 'startY' are defined somewhere
         double startX = 0;
@@ -108,11 +124,14 @@ public class Player_create {
                 throw new RuntimeException(e);
             }
         });
+        KeyFrame soundcheck = new KeyFrame(Duration.seconds(0.2),event -> {
+           Walk();
+        });
 
 
 // Add the KeyFrame to the Timeline
         timeline78.getKeyFrames().add(conditionCheckFrame);
-
+        timeline80.getKeyFrames().add(soundcheck);
         TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(2), player.getNode());
         translateTransition.setToX(endPointX-player.getNode().getFitWidth()/2); // Move the player node by endPointX
         KeyFrame conditionCheckFrame2 = new KeyFrame(Duration.seconds(0.0001), event -> {
@@ -127,18 +146,22 @@ public class Player_create {
             }
         });
         timeline79.getKeyFrames().add(conditionCheckFrame2);
+        timeline80.setCycleCount(Animation.INDEFINITE);
         translateTransition.play();
+
         timeline78.setCycleCount(Animation.INDEFINITE);
         timeline79.setCycleCount(Animation.INDEFINITE);
 // Play the Timeline
         timeline78.play();
         timeline79.play();
+        timeline80.play();
 //        timeline.play();
         //Thread.sleep(200);
         translateTransition.setOnFinished(actionEvent -> {
             System.out.println("player kaha hai"+player.getNode().getTranslateX());
             timeline78.stop();
             timeline79.stop();
+            timeline80.stop();
             CountDownLatch latch = new CountDownLatch(3);
             if (endPointX < pillarstartx  || endPointX > pillarstartx+pillar1.getPillar().getWidth() || sth.getPostion_face()==1 || Collisiondetected) {
 
@@ -151,6 +174,7 @@ public class Player_create {
 ////                Label high_score = controller.high_score_tell;
 ////                high_score.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
 //                scoreLabel1.setVisible(true);
+
                 System.out.println(pillarstartx - pillar1.getPillar().getWidth());
                 System.out.println(pillarstartx - pillar1.getWidth());
                 System.out.println(pillarstartx);
@@ -186,7 +210,10 @@ public class Player_create {
                 // Play both the transition and the timeline in parallel
                 playerTransition.play();
                 timeline1.play();
-
+                String fallSound = "src/main/resources/com/example/stick_hero_final_project/Sounds/dead.wav";
+                Media sound_button = new Media(new File(fallSound).toURI().toString());
+                MediaPlayer m = new MediaPlayer(sound_button);
+                m.play();
                 // Add an event handler to perform an action after the animation completes
                 playerTransition.setOnFinished(event -> {
                     //newstage.close();
@@ -258,6 +285,10 @@ public class Player_create {
                 sth.getView().setTextFill(Color.BLACK);
 //                sth.getView().setVisible(true);
                 Platform.runLater(() -> {
+                    String perectionSound = "src/main/resources/com/example/stick_hero_final_project/Sounds/victory.wav";
+                    Media sound_button = new Media(new File(perectionSound).toURI().toString());
+                    MediaPlayer m = new MediaPlayer(sound_button);
+                    m.play();
                     sth.getView().setVisible(true);
 //                sth.getView().setLayoutY(endPointY);
                     ScaleTransition scaleTransition = new ScaleTransition(Duration.seconds(2), sth.getView());
@@ -312,22 +343,22 @@ public class Player_create {
                 System.out.println("Positions " + pillar2.getPillar().getX());
                 System.out.println("Player Positions"+player.getNode().getX());
                 sth.setCurrent_pillar(sth.getAhead_pillar());
-                TranslateTransition playerTransition = new TranslateTransition(Duration.seconds(1), player.getNode());
+                TranslateTransition playerTransition = new TranslateTransition(Duration.seconds(0.2), player.getNode());
                 playerTransition.setByX(-player.getNode().getTranslateX());
 //                    playerTransition.play();
 
 
-                TranslateTransition pillar2Transition = new TranslateTransition(Duration.seconds(1), pillar2.getPillar());
+                TranslateTransition pillar2Transition = new TranslateTransition(Duration.seconds(0.2), pillar2.getPillar());
                 pillar2Transition.setByX(-1000);
 //                    pillar2Transition.play();
-                TranslateTransition pillar1Transition = new TranslateTransition(Duration.seconds(1), pillar1.getPillar());
+                TranslateTransition pillar1Transition = new TranslateTransition(Duration.seconds(0.2), pillar1.getPillar());
                 pillar1Transition.setByX(-pillar1.getPillar().getX());
                 //CompletableFuture<Void> future = CompletableFuture.runAsync(() -> sth.createRandomPillar(rot));
 //                    player.getNode().setX(0);
 //                    player.getNode().setY(500);
 //                    pillar1Transition.play();
                 //Animation for moving the stick to the left
-                TranslateTransition stickTransition = new TranslateTransition(Duration.seconds(1), stick.getStick());
+                TranslateTransition stickTransition = new TranslateTransition(Duration.seconds(0.2), stick.getStick());
                 stickTransition.setByX(-player.getNode().getTranslateX()-2);
 
 
@@ -498,7 +529,7 @@ public class Player_create {
         if (collisionDetected){
             sth.inc_cherries();
             sth.remcherry();
-            cherry_set();
+            cherry_set(sth);
 //            System.out.println("halndnskdnadlaskdand");
         }
         return collisionDetected;}
@@ -512,9 +543,15 @@ public class Player_create {
         return false;
 
     }
-    public void cherry_set(){
-
+    public void cherry_set(stick_hero sth){
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("cherry_data.txt"))) {
+            outputStream.writeObject(sth.getCherries());
+            System.out.println("Done");
+            //outputStream.writeObject(sth.getCherries());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
-
 }
+
 

@@ -32,10 +32,11 @@ public class HelloController {
     }
 
     public void onPlayButtonClick(MouseEvent MouseEvent) throws IOException {
-        String button_sound  = "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\button.mp3";
+        String button_sound  = "src/main/resources/com/example/stick_hero_final_project/Sounds/button.mp3";
         Media sound_button = new Media(new File(button_sound).toURI().toString());
         MediaPlayer m = new MediaPlayer(sound_button);
-
+        m.setVolume(1);
+        m.play();
         // Load the FXML file for the new scene
         Stage stage;
         if (playButton!=null){
@@ -43,7 +44,7 @@ public class HelloController {
         else {
             stage = (Stage) playButton1.getScene().getWindow();
         }
-        m.play();
+
         // Close the current stage
         stage.close();
         stick_hero p = new stick_hero(new Player_create(0,0,0,0),10,0,100,30,0,false,true,new Label("HI"));

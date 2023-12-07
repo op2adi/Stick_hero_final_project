@@ -44,8 +44,9 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //    private
     private int stick_speed_fllag = 0;
     private ImageView cherry_1;
-    private String start_of_game_sound= "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\Start_of_Game.mp4";
-    private String stick_grow_sound = "D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Sounds\\stick_grow_loop.wav";
+    private String start_of_game_sound = "src/main/resources/com/example/stick_hero_final_project/Sounds/Start_of_Game.mp4";
+    //"D:\Stick_Hero_Final_Project\src\main\resources\com\example\stick_hero_final_project\Sounds\Start_of_Game.mp4"
+    private String stick_grow_sound = ("src/main/resources/com/example/stick_hero_final_project/Sounds/stick_grow_loop.wav");
 
     public Rectangle getRect123() {
         return rect123;
@@ -444,18 +445,26 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         newStage.setHeight(800);
         newStage.setMaxWidth(600);
         newStage.setMaxHeight(730);
-        Image backgroundImage = null;
+        //Image backgroundImage = null;
         String srt = getRandomImage();
-        backgroundImage = new Image(srt);
-        BackgroundImage background = new BackgroundImage(
-                backgroundImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT
-        );
+        System.out.println(srt);
+        FileInputStream inputStream1 = null;
+        try {
+            inputStream1 = new FileInputStream(srt);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Image backgroundImage = new Image(inputStream1);
+//        backgroundImage = new Image(srt);
+//        BackgroundImage background = new BackgroundImage(
+//                backgroundImage,
+//                BackgroundRepeat.NO_REPEAT,
+//                BackgroundRepeat.NO_REPEAT,
+//                BackgroundPosition.DEFAULT,
+//                BackgroundSize.DEFAULT
+//        );
 //        todo();
-        Background backgroundWithImage = new Background(background);
+        //Background backgroundWithImage = new Background(background);
         ImageView backgroundImageView = new ImageView(backgroundImage);
         System.out.println(srt); //debug statement for background
 // Create a Background with the BackgroundImage
@@ -474,7 +483,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         ((Pane) root).getChildren().add(backgroundImageView);
         ((Pane) root).getChildren().add(layoutforscore);
         ((Pane) root).getChildren().add(score_view);
-        FileInputStream inputStream = new FileInputStream("D:\\Stick_Hero_Final_Project\\src\\main\\java\\com\\example\\stick_hero_final_project\\Images\\cherry.png");
+        String imageUrl = ("src/main/resources/com/example/stick_hero_final_project/Images/cherry.png");
+        FileInputStream inputStream = new FileInputStream(imageUrl);
         Image image = new Image(inputStream);
         ImageView imageView = new ImageView();
         // Setting the image to the ImageView
@@ -554,6 +564,12 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     public void init() throws IOException {
+        newStage.setOnCloseRequest(event -> {
+            // Handle the close request here
+            System.out.println("Close button pressed");
+            // You can perform any cleanup or other actions here before exiting
+            Platform.exit(); // Exit the application
+        });
 //        player.getNode().setX(0);
 //        player.getNode().setY(500);
 //        if (((Pane) root).getChildren().contains(cherry_1)){
@@ -709,7 +725,13 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 }
             }
         });
+        newScene.addEventFilter(MouseEvent.MOUSE_MOVED,event -> {
+            double mouseX = event.getScreenX();
+            double mouseY = event.getScreenY();
 
+            // Print the X and Y coordinates of the mouse pointer on the screen
+            System.out.println("Mouse X: " + mouseX + ", Mouse Y: " + mouseY);
+        });
         newScene.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
             if (keyIsPressed==true){
                 //timeline.stop();
@@ -800,7 +822,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 // Create KeyValue to gradually change the x position of the rectangle
                 KeyValue keyValue = new KeyValue(ahead_pillar.getPillar().xProperty(), distance);
                 KeyValue keyValue2 = new KeyValue(rd.xProperty(), distance + width / 2);
-                KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), keyValue, keyValue2);
+                KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.2), keyValue, keyValue2);
 
                 timeline.getKeyFrames().add(keyFrame);
                 timeline.play();
@@ -822,7 +844,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                     System.out.println("kopkop" + ahead_pillar.getPillar().getX());
                     Random rand = new Random();
                     boolean randomBoolean = rand.nextBoolean();
-                    if (randomBoolean){
+                    if (randomBoolean && width>50){
                         if (cherry_1==null){
                             cheery c = new cheery(current_pillar,ahead_pillar,player);
                             cherry_1 = c.getCherry_image();
@@ -866,7 +888,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 brahmastra++;
                 Random rand = new Random();
                 boolean randomBoolean = rand.nextBoolean();
-                if (randomBoolean){
+                if (randomBoolean && width>50){
                     cheery c = new cheery(current_pillar,ahead_pillar,player);
                     cherry_1 = c.getCherry_image();
                 }
@@ -952,7 +974,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         int index = random.nextInt(back_handler.getBackgroundImages().size());
         return back_handler.getBackgroundImages().get(index);
     }
-    @FXML
+
     private void onMouseDragged(MouseEvent event) {
         double xCoordinate = event.getX();
         double yCoordinate = event.getY();

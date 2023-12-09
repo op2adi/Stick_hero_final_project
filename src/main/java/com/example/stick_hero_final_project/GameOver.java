@@ -78,7 +78,7 @@ public class GameOver {
         });
         stage.close();
 
-        StickHero pop = new StickHero(new PlayerCreate(0, 0, 0, 0), 10, 0, 100, 30, 0, false, true, new Label("HI"),false);
+        StickHero pop = new StickHero(new PlayerCreate(0, 0, 0, 0), 10, 0, 100, 30, 0, false, true, new Label("HI"),false,false);
         pop.back_create();
     }
 
@@ -174,7 +174,7 @@ public class GameOver {
                         stage = (Stage) Revive_image.getScene().getWindow();
                     }
                     stage.close();
-                    StickHero sth = new StickHero(p,1,score,10,10,chr-5,false,false,wel,true);
+                    StickHero sth = new StickHero(p,1,score,10,10,chr-5,false,false,wel,true,false);
                     sth.back_create();
                 }
                 else{

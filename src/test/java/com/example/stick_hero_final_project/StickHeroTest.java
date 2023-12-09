@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.concurrent.CountDownLatch;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +31,7 @@ public class StickHeroTest {
         CountDownLatch latch = new CountDownLatch(1);
 
         Platform.runLater(() -> {
-            StickHero p = new StickHero(new PlayerCreate(0, 0, 0, 0), 10, 0, 100, 30, 0, false, true, new Label("HI"),false);
+            StickHero p = new StickHero(new PlayerCreate(0, 0, 0, 0), 10, 0, 100, 30, 0, false, true, new Label("HI"),false, false);
             try {
                 p.back_create();
 

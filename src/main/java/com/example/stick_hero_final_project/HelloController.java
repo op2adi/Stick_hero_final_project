@@ -19,6 +19,8 @@ public class HelloController {
     public ImageView clobutt1;
     public Label playButton1;
     public Circle test;
+    public Circle load;
+    public Label loadimg;
     @FXML
     private Label welcomeText;
 
@@ -43,7 +45,7 @@ public class HelloController {
 
         // Close the current stage
         stage.close();
-        StickHero p = new StickHero(new PlayerCreate(0,0,0,0),10,0,100,30,0,false,true,new Label("HI"),false);
+        StickHero p = new StickHero(new PlayerCreate(0,0,0,0),10,0,100,30,0,false,true,new Label("HI"),false,false);
 
         p.back_create();
     }
@@ -60,4 +62,24 @@ public class HelloController {
         stage.close();
     }
 
+    public void Reload(MouseEvent mouseEvent) throws IOException {
+        String button_sound  = "src/Main/resources/com/example/stick_hero_final_project/Sounds/button.mp3";
+        Media sound_button = new Media(new File(button_sound).toURI().toString());
+        MediaPlayer m = new MediaPlayer(sound_button);
+        m.setVolume(1);
+        m.play();
+        // Load the FXML file for the new scene
+        Stage stage;
+        if (load!=null){
+            stage = (Stage) load.getScene().getWindow();}
+        else {
+            stage = (Stage) loadimg.getScene().getWindow();
+        }
+
+        // Close the current stage
+        stage.close();
+        StickHero p = new StickHero(new PlayerCreate(0,0,0,0),10,0,100,30,0,false,true,new Label("HI"),false,true);
+
+        p.back_create();
+    }
 }

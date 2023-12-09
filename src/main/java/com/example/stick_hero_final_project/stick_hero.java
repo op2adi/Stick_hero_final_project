@@ -20,7 +20,6 @@ import javafx.util.Duration;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -455,7 +454,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         }
         Image backgroundImage = new Image(inputStream1);
 //        backgroundImage = new Image(srt);
-//        BackgroundImage background = new BackgroundImage(
+//        BackgroundImage Background = new BackgroundImage(
 //                backgroundImage,
 //                BackgroundRepeat.NO_REPEAT,
 //                BackgroundRepeat.NO_REPEAT,
@@ -463,11 +462,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //                BackgroundSize.DEFAULT
 //        );
 //        todo();
-        //Background backgroundWithImage = new Background(background);
+        //Background backgroundWithImage = new Background(Background);
         ImageView backgroundImageView = new ImageView(backgroundImage);
-        System.out.println(srt); //debug statement for background
+        System.out.println(srt); //debug statement for Background
 // Create a Background with the BackgroundImage
-// Set the background for the Pane
+// Set the Background for the Pane
         view = new Label();
         backgroundImageView.setFitWidth(600);
         layoutforscore = new Rectangle(216, 76, 100, 100);
@@ -956,7 +955,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     public void initialize1(Pane mainPane) {
-        // Set the background image
+        // Set the Background image
         Image backgroundImage = new Image(getRandomImage());
         BackgroundImage background = new BackgroundImage(
                 backgroundImage,
@@ -966,11 +965,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 BackgroundSize.DEFAULT
         );
 
-        mainPane.setBackground(new Background(background));
+        mainPane.setBackground(new javafx.scene.layout.Background(background));
     }
 
     private String getRandomImage() {
-        background back_handler = new background();
+        Background back_handler = new Background();
         Random random = new Random();
         int index = random.nextInt(back_handler.getBackgroundImages().size());
         return back_handler.getBackgroundImages().get(index);

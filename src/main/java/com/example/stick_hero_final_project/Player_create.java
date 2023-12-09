@@ -125,7 +125,7 @@ public class Player_create {
             }
         });
         KeyFrame soundcheck = new KeyFrame(Duration.seconds(0.2),event -> {
-           Walk();
+            Walk();
         });
 
 
@@ -165,7 +165,7 @@ public class Player_create {
             cherry_set(sth);
             CountDownLatch latch = new CountDownLatch(3);
             if (endPointX < pillarstartx  || endPointX > pillarstartx+pillar1.getPillar().getWidth() || sth.getPostion_face()==1 || Collisiondetected) {
-
+                sth.timeline1 = null;
 //                showAlert("+1");
 //                stick_hero controller1  = curr_loader.getController();
 //
@@ -227,22 +227,30 @@ public class Player_create {
                         scene = new Scene(root, 320, 240);
                         GameOver controller = fxmlLoader.getController();
                         // Access the Label and set its text
-                        Label scoreLabel = controller.score_tell;
-                        scoreLabel.setText("Your Score "+String.valueOf(sth.getScore_view()));
-                        scoreLabel.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
-                        Label high_score = controller.high_score_tell;
+                        //Label scoreLabel = controller.score_tell;
+                        controller.getScore_tell().setText("Your Score "+String.valueOf(sth.getScore_view()));
+                        controller.getScore_tell().setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+                        Label high_score = controller.getHigh_score_tell();
                         high_score.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
-                        controller.restart.setStyle("-fx-background-color: #3498db; -fx-text-fill: #ffffff; -fx-padding: 10px 20px; -fx-border-color: transparent; -fx-border-radius: 5px;");
-                        controller.exit_from_game.setStyle("-fx-background-color: #3498db; -fx-text-fill: #ffffff; -fx-padding: 10px 20px; -fx-border-color: transparent; -fx-border-radius: 5px;");
+                        controller.getRestart().setStyle("-fx-background-color: #3498db; -fx-text-fill: #ffffff; -fx-padding: 10px 20px; -fx-border-color: transparent; -fx-border-radius: 5px;");
+                        controller.getExit_from_game().setStyle("-fx-background-color: #3498db; -fx-text-fill: #ffffff; -fx-padding: 10px 20px; -fx-border-color: transparent; -fx-border-radius: 5px;");
                         int highScore = 0;
+                        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("back_end_data.txt"))) {
+                            outputStream.writeObject(sth.getScore());
+                            outputStream.writeObject(sth.getCherries());
+
+                        }
+                        catch (Exception e){
+                            e.printStackTrace();
+                        }
                         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("meta_data.txt"))) {
                             Integer previousScore = (Integer) inputStream.readObject();
-                                if (previousScore != null) {
-                                        highScore = previousScore;
-                                        System.out.println("High score read from file: " + highScore);
-                                    } else {
-                                        System.out.println("Invalid data found in the file.");
-                                    }
+                            if (previousScore != null) {
+                                highScore = previousScore;
+                                System.out.println("High score read from file: " + highScore);
+                            } else {
+                                System.out.println("Invalid data found in the file.");
+                            }
                         } catch (FileNotFoundException e) {
                             System.out.println("File not found. No high score recorded yet.");
                         } catch (IOException | ClassNotFoundException e) {
@@ -524,22 +532,22 @@ public class Player_create {
     public boolean boundcheck(ImageView cheery_image,stick_hero sth) throws InterruptedException {
 //        System.out.println("mskmsdsmdskdmsdks");
         if (cheery_image!=null){
-        boolean collisionDetected = playerImageView.getBoundsInParent().intersects(cheery_image.getBoundsInParent());
+            boolean collisionDetected = playerImageView.getBoundsInParent().intersects(cheery_image.getBoundsInParent());
 
 //        System.out.println("mskmsdsmdskdmsdks");
-        if (collisionDetected){
-            sth.inc_cherries();
-            sth.remcherry();
+            if (collisionDetected){
+                sth.inc_cherries();
+                sth.remcherry();
 
 //            System.out.println("halndnskdnadlaskdand");
-        }
-        return collisionDetected;}
+            }
+            return collisionDetected;}
         return false;
     }
     public boolean Rectangle_collison(Pillar q,Pillar p,stick_hero sth){
         if (sth.getPostion_face()==1){
-        boolean collisonDetected = (playerImageView.getBoundsInParent().intersects(p.getPillar().getBoundsInParent()) || playerImageView.getBoundsInParent().intersects(q.getPillar().getBoundsInParent()));
-        return collisonDetected;
+            boolean collisonDetected = (playerImageView.getBoundsInParent().intersects(p.getPillar().getBoundsInParent()) || playerImageView.getBoundsInParent().intersects(q.getPillar().getBoundsInParent()));
+            return collisonDetected;
         }
         return false;
 
@@ -557,5 +565,3 @@ public class Player_create {
 
     }
 }
-
-

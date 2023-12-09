@@ -48,13 +48,8 @@ public class cheery {
         double randomX = (minX + maxX)/2;
         cherry_image.setX(randomX);
         System.out.println("vhhv"+cherry_image.getX());
-        boolean dirn = random.nextBoolean();
-        if (dirn){
-            cherry_image.setY(500+player.getNode().getFitHeight()+5);
-        }
-        else {
-            cherry_image.setY(500-player.getNode().getFitHeight()+10);
-        }
+        //boolean dirn = false;
+        cherry_image.setY(500 + player.getNode().getFitHeight() + 5);
 
     }
 }

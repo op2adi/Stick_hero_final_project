@@ -804,6 +804,9 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
                 // Second action on even click
             }
             }
+            if (event.getCode() == KeyCode.S){
+
+            }
         });
         newScene.addEventFilter(MouseEvent.MOUSE_MOVED,event -> {
             double mouseX = event.getScreenX();

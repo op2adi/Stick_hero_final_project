@@ -27,7 +27,7 @@ public class StickHeroTest {
         Platform.exit();
     }
     @Test
-    public void test1() {
+    public void StickheroNullity() {
         CountDownLatch latch = new CountDownLatch(1);
 
         Platform.runLater(() -> {
@@ -47,9 +47,39 @@ public class StickHeroTest {
         try {
             // Wait for the JavaFX operations to complete on the Application Thread
             latch.await();
-            Thread.sleep(10000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void stickTest(){
+        Stick s = new Stick(0,0,0,0);
+        s.setHt(0);
+        for (int i =0;i<5;i++){
+            s.extend(10);
+        }
+        assertEquals(50,s.getHt());
+    }
+    @Test
+    public void cherryTest(){
+        Pillar p1 = new Pillar(9,99,9,9);
+        Pillar p2 = new Pillar(9,99,90,9);
+        Pillar p3 = new Pillar(9,99,67,9);
+        Pillar p4 = new Pillar(9,990,9,9);
+        PlayerCreate player = new PlayerCreate(0,0,0,0);
+        Cheery c = Cheery.Cheery_getinstance(p1,p2,player);
+        Cheery c2 = Cheery.Cheery_getinstance(p3,p4,player);
+        if (c.equals(c2)){
+            System.out.println(c.toString());
+            System.out.println(c2.toString());
+            assert(true);
+        }
+        else {
+            assert(false);
+        }
+    }
+
+
 }

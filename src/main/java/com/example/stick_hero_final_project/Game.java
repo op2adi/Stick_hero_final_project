@@ -34,6 +34,6 @@ public class Game extends Application {
 
     @Override
     public String toString() {
-        return "main{}";
+        return "Main{}";
     }
 }

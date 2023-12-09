@@ -1,12 +1,16 @@
 package com.example.stick_hero_final_project;
 
+//import com.sun.javafx.menu.MenuItemBase;
 import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,6 +25,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -28,7 +33,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.lang.Thread.sleep;
 
-public class stick_hero extends Thread implements score_interface,cherries,points,Serializable{
+public class StickHero extends Thread implements ScoreInterface, Cherries, Points,Serializable{
+    public void run() {
+        try {
+            back_create();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public Rectangle rect123;
 
     public int getStick_speed_fllag() {
@@ -40,12 +52,13 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
     private int postion_face = 0; // 0 means up and 1 means down
 
-//    private
+
+    //    private
     private int stick_speed_fllag = 0;
     private ImageView cherry_1;
-    private String start_of_game_sound = "src/main/resources/com/example/stick_hero_final_project/Sounds/Start_of_Game.mp4";
-    //"D:\Stick_Hero_Final_Project\src\main\resources\com\example\stick_hero_final_project\Sounds\Start_of_Game.mp4"
-    private String stick_grow_sound = ("src/main/resources/com/example/stick_hero_final_project/Sounds/stick_grow_loop.wav");
+    private String start_of_game_sound = "src/Main/resources/com/example/stick_hero_final_project/Sounds/Start_of_Game.mp4";
+    //"D:\Stick_Hero_Final_Project\src\Main\resources\com\example\stick_hero_final_project\Sounds\Start_of_Game.mp4"
+    private String stick_grow_sound = ("src/Main/resources/com/example/stick_hero_final_project/Sounds/stick_grow_loop.wav");
 
     public Rectangle getRect123() {
         return rect123;
@@ -76,7 +89,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
     private CountDownLatch latch = new CountDownLatch(0);
     private Scene newScene;
-    stick s = new stick(10, 10, 5, 0);
+    Stick s = new Stick(10, 10, 5, 0);
     int brahmastra = 0; //to move synchronous
     public void setStart_of_game(String start_of_game_sound) {
         this.start_of_game_sound = start_of_game_sound;
@@ -115,14 +128,14 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
     private Media stick_fall_sound =  new Media(new File(stick_grow_sound).toURI().toString());
-    private Player_create player;
+    private PlayerCreate player;
     private final int height = 80;
 
-    public Player_create getPlayer() {
+    public PlayerCreate getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player_create player) {
+    public void setPlayer(PlayerCreate player) {
         this.player = player;
     }
 
@@ -165,11 +178,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         this.newScene = newScene;
     }
 
-    public stick getS() {
+    public Stick getS() {
         return s;
     }
 
-    public void setS(stick s) {
+    public void setS(Stick s) {
         this.s = s;
     }
 
@@ -273,7 +286,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         MediaPlayer mediaPlayer = new MediaPlayer(this.getSound());
         mediaPlayer.play();
     }
-    public stick_hero(Player_create player, int speed, int score, int pillar_length, int getPillar_width, int cherries, boolean keyIsPressed, boolean click_flag, Label welcomeText) {
+    public StickHero(PlayerCreate player, int speed, int score, int pillar_length, int getPillar_width, int cherries, boolean keyIsPressed, boolean click_flag, Label welcomeText,boolean revived) {
         this.player = null;
         this.speed = speed;
         this.score = score;
@@ -283,6 +296,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         this.keyIsPressed = keyIsPressed;
         this.click_flag = click_flag;
         this.welcomeText = welcomeText;
+        this.revived=revived;
+        //cherryadapt.add(new StickHero(player,speed,score,pillar_length,getPillar_width,cherries,keyIsPressed,click_flag,welcomeText));
         setTest(1);
     }
 
@@ -316,6 +331,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     private boolean keyIsPressed = false;
     private Parent root;
     private boolean click_flag = true; // will make it True once key is pressed
+    private boolean revived;
     private Rectangle layoutforcherry;
     @FXML
     private Label welcomeText;
@@ -404,11 +420,35 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     public int getAdi_flag() {
         return adi_flag;
     }
+    private int clickCount =0;
+    //private Button button2 = new Button("Masti");
     public void back_create() throws IOException {
+
+
         timeline1.setCycleCount(-1);
         brahmastra = 0;
         score_view = new Label(String.valueOf(score));
         cherryscore = new Label(" ");
+//        Button button = new Button("Masti");
+//
+//        // Set action for the button
+//        button.setOnAction(asdfghjkl -> {
+//            clickCount++;
+//            if (clickCount % 2 == 1) {
+//                System.out.println("First action performed");
+//                ahead_pillar.ofpillar(ahead_pillar);
+//
+//                // First action on odd click
+//            } else {
+//                System.out.println("Second action performed");
+//                ahead_pillar.onpillar(ahead_pillar);
+//                // Second action on even click
+//            }
+//        });
+//
+//        button.setLayoutX(300);
+//        button.setLayoutY(100);
+
         try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("cherry_data.txt"))) {
             Integer chr = (Integer) inputStream.readObject();
             if (chr != null) {
@@ -476,16 +516,21 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         layoutforcherry.setFill(Color.SKYBLUE); // Set fill color
         layoutforcherry.setStroke(Color.BLACK);
         player.getNode().setTranslateX(0);
+
         backgroundImageView.setFitHeight(700);
         score_view.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+
         ((Pane) root).getChildren().add(backgroundImageView);
         ((Pane) root).getChildren().add(layoutforscore);
         ((Pane) root).getChildren().add(score_view);
-        String imageUrl = ("src/main/resources/com/example/stick_hero_final_project/Images/cherry.png");
+        String imageUrl = ("src/Main/resources/com/example/stick_hero_final_project/Images/cherry.png");
         FileInputStream inputStream = new FileInputStream(imageUrl);
         Image image = new Image(inputStream);
         ImageView imageView = new ImageView();
         // Setting the image to the ImageView
+//        ((Pane) root).getChildren().add(button2);
+//        button2.setLayoutX(200);
+//        button2.setLayoutY(300);
         imageView.setImage(image);
         imageView.setX(0);
         imageView.setY(0);
@@ -504,7 +549,24 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //        view.setVisible(false);
         score_view.setLayoutX(258); // Position from the right
         score_view.setLayoutY(100);
-
+        if (revived==false) {
+            try (ObjectInputStream inputStream78 = new ObjectInputStream(new FileInputStream("save_data.txt"))) {
+                Integer chr = (Integer) inputStream78.readObject();
+                if (chr != null) {
+                    view.setText(String.valueOf(chr));
+                    score = chr;
+                } else {
+                    System.out.println("Invalid data found in the file.");
+                }
+            } catch (FileNotFoundException e) {
+                System.out.println("File not found. No high score recorded yet.");
+                view.setText(String.valueOf(0));
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                view.setText(String.valueOf(0));
+            }
+        }
 //        initialize1((Pane) root);
         // Show the new stage
         ((Pane) root).getChildren().add(player.getNode());
@@ -513,6 +575,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
         start_song();
         newStage.show();
 //        while (newScene==null){}
+        if (current_pillar!=null){
+        current_pillar.onpillar(current_pillar);}
         init();
     }
     public void rem(){
@@ -604,7 +668,10 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 //        view = new Label("+1");
         view.setText("+1");
         view.setVisible(false);
+
         ((Pane)root).getChildren().add(view);
+        if (current_pillar!= null){
+        current_pillar.onpillar(current_pillar);}
 //        view.setVisible(false);
 // Create a BackgroundImage
 
@@ -620,7 +687,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 double x = event.getSceneX();
                 double y = event.getSceneY();
 
-                s = new stick(0, 0, 5, 0);
+                s = new Stick(0, 0, 5, 0);
                 if (!((Pane) root).getChildren().contains(s.getStick())) {
                     ((Pane) root).getChildren().add(s.getStick());
                 }
@@ -723,6 +790,19 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                     postion_face = 0;
 
                 }
+            }
+            if (event.getCode() == KeyCode.H){
+                clickCount++;
+            if (clickCount % 2 == 1) {
+                System.out.println("First action performed");
+                ahead_pillar.ofpillar(ahead_pillar);
+
+                // First action on odd click
+            } else {
+                System.out.println("Second action performed");
+                ahead_pillar.onpillar(ahead_pillar);
+                // Second action on even click
+            }
             }
         });
         newScene.addEventFilter(MouseEvent.MOUSE_MOVED,event -> {
@@ -846,7 +926,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                     boolean randomBoolean = rand.nextBoolean();
                     if (randomBoolean && distance>130){
                         if (cherry_1==null){
-                            cheery c = new cheery(current_pillar,ahead_pillar,player);
+                            Cheery c = Cheery.Cheery_getinstance(current_pillar, ahead_pillar, player);
                             cherry_1 = c.getCherry_image();
                         }
                         //cherry_1 = c.getCherry_image();
@@ -889,7 +969,7 @@ public class stick_hero extends Thread implements score_interface,cherries,point
                 Random rand = new Random();
                 boolean randomBoolean = rand.nextBoolean();
                 if (randomBoolean && distance>130){
-                    cheery c = new cheery(current_pillar,ahead_pillar,player);
+                    Cheery c = Cheery.Cheery_getinstance(current_pillar,ahead_pillar,player);
                     cherry_1 = c.getCherry_image();
                 }
                 if (cherry_1!=null){
@@ -928,8 +1008,8 @@ public class stick_hero extends Thread implements score_interface,cherries,point
 
 
             if (randomBoolean){
-                cheery c = new cheery(current_pillar,ahead_pillar1,player);
-                cherry_1 = c.getCherry_image();
+                //Cheery c = new Cheery(current_pillar,ahead_pillar1,player);
+                //cherry_1 = c.getCherry_image();
             }
             // Add the pillar to the root pane
             ((Pane) root).getChildren().addAll(ahead_pillar1.getNode(), ahead_pillar1.getRedblock());
@@ -947,11 +1027,11 @@ public class stick_hero extends Thread implements score_interface,cherries,point
     }
 
         public Node cr_pl_get_nd(){
-        return (new Player_create(0,0,0,0)).getNode();
+        return (new PlayerCreate(0,0,0,0)).getNode();
     }
 
-    public Player_create cr_pl(){
-        return (new Player_create(0,0,0,0));
+    public PlayerCreate cr_pl(){
+        return (new PlayerCreate(0,0,0,0));
     }
 
     public void initialize1(Pane mainPane) {

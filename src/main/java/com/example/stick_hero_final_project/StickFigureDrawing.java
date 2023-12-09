@@ -33,7 +33,7 @@ public class StickFigureDrawing extends Application {
         gc.translate(200, canvasHeight - platformHeight);
         gc.rotate(45); // Rotation in degrees
 
-        // Draw stick
+        // Draw Stick
         gc.beginPath();
         gc.setLineWidth(stickWidth);
         gc.moveTo(0, 0);

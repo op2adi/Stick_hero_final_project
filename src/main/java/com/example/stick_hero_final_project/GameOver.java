@@ -1,9 +1,7 @@
 package com.example.stick_hero_final_project;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -80,7 +78,7 @@ public class GameOver {
         });
         stage.close();
 
-        stick_hero pop = new stick_hero(new Player_create(0, 0, 0, 0), 10, 0, 100, 30, 0, false, true, new Label("HI"));
+        StickHero pop = new StickHero(new PlayerCreate(0, 0, 0, 0), 10, 0, 100, 30, 0, false, true, new Label("HI"),false);
         pop.back_create();
     }
 
@@ -152,7 +150,7 @@ public class GameOver {
                 if (chr-5>=0){
                     System.out.println("Revived");
 
-                    Player_create p = new Player_create(0,0,0,0);
+                    PlayerCreate p = new PlayerCreate(0,0,0,0);
                     Label wel = new Label();
                     Stage stage;
                     try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("back_end_data.txt"))) {
@@ -176,7 +174,7 @@ public class GameOver {
                         stage = (Stage) Revive_image.getScene().getWindow();
                     }
                     stage.close();
-                    stick_hero sth = new stick_hero(p,1,score,10,10,chr-5,false,false,wel);
+                    StickHero sth = new StickHero(p,1,score,10,10,chr-5,false,false,wel,true);
                     sth.back_create();
                 }
                 else{
@@ -184,7 +182,7 @@ public class GameOver {
                     System.out.println("Cant revive");
                 }
                 //cherryscore.setText(String.valueOf(chr));
-                //cherries = chr;
+                //Cherries = chr;
             } else {
                 System.out.println("Invalid data found in the file.");
             }

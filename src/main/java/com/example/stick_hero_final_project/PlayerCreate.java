@@ -2,10 +2,6 @@ package com.example.stick_hero_final_project;
 
 //import com.sun.javafx.tk.TKStage;
 import javafx.animation.*;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -31,23 +26,24 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.*;
-import java.util.concurrent.CompletableFuture;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
-public class Player_create {
+public class PlayerCreate{
     private int check_fall_flag = 0;
     private ImageView playerImageView;
     private int owl = 1;
     public void Walk(){
-        String button_sound  = "src/main/resources/com/example/stick_hero_final_project/Sounds/kick.wav";
+        String button_sound  = "src/Main/resources/com/example/stick_hero_final_project/Sounds/kick.wav";
         Media sound_button = new Media(new File(button_sound).toURI().toString());
         MediaPlayer m = new MediaPlayer(sound_button);
         m.setVolume(1);
         m.play();
     }
-    public Player_create(double x, double y, double width, double height) {
-        // Load the stick hero image
-        String imageUrl = ("src/main/resources/com/example/stick_hero_final_project/Images/stick_hero_main-removebg-preview.png");
+    public PlayerCreate(double x, double y, double width, double height) {
+        //super();
+        // Load the Stick hero image
+        String imageUrl = ("src/Main/resources/com/example/stick_hero_final_project/Images/stick_hero_main-removebg-preview.png");
         FileInputStream inputStream = null;
         try {
             inputStream = new FileInputStream(imageUrl);
@@ -56,7 +52,7 @@ public class Player_create {
         }
         Image playerImage = new Image(inputStream);
         //ImageView imageView = new ImageView();
-        // Create an ImageView with the stick hero image
+        // Create an ImageView with the Stick hero image
         playerImageView = new ImageView(playerImage);
         playerImageView.setX(x);
         playerImageView.setY(y);
@@ -80,9 +76,9 @@ public class Player_create {
         this.playerImageView = playerImageView;
     }
 
-    public void movePlayerOnRotatedStick(stick stick, Player_create player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage, stick_hero sth,FXMLLoader curr_loader,ImageView cherry,Pane rot)  throws InterruptedException {
+    public void movePlayerOnRotatedStick(Stick stick, PlayerCreate player, Scene newScene, Pillar pillar1, Pillar pillar2, Stage newstage, StickHero sth, FXMLLoader curr_loader, ImageView cherry, Pane rot)  throws InterruptedException {
         check_fall_flag = 0;
-        double stickAngle = stick.getStick().getRotate(); // Get the current rotation angle of the stick
+        double stickAngle = stick.getStick().getRotate(); // Get the current rotation angle of the Stick
         double startx = player.getNode().getX();
         System.out.println(startx);
         double starty = player.getNode().getY();
@@ -90,7 +86,7 @@ public class Player_create {
         double pillarstarty = pillar1.getPillar().getY();
         System.out.println(pillarstartx);
         double endPointX = player.getNode().getTranslateX()+40+stick.getHt();
-//        double endpt = stick.getStick().getX();
+//        double endpt = Stick.getStick().getX();
 //        System.out.println(endpt);
         double endPointY = player.getNode().getY();
 
@@ -167,7 +163,7 @@ public class Player_create {
             if (endPointX < pillarstartx  || endPointX > pillarstartx+pillar1.getPillar().getWidth() || sth.getPostion_face()==1 || Collisiondetected) {
                 sth.timeline1 = null;
 //                showAlert("+1");
-//                stick_hero controller1  = curr_loader.getController();
+//                StickHero controller1  = curr_loader.getController();
 //
 //                Label scoreLabel1 = controller1.getView();
 //                scoreLabel1.setText("GAMEOVER");
@@ -181,8 +177,8 @@ public class Player_create {
                 System.out.println(pillarstartx);
                 check_fall_flag = 1;
                 Rotate rotate = new Rotate();
-                rotate.setPivotX(stick.getStick().getX() + stick.getLength() / 2); // Pivot X at the center of the stick
-                rotate.setPivotY(stick.getStick().getY() + stick.getStick().getHeight()); // Pivot Y at the bottom of the stick
+                rotate.setPivotX(stick.getStick().getX() + stick.getLength() / 2); // Pivot X at the center of the Stick
+                rotate.setPivotY(stick.getStick().getY() + stick.getStick().getHeight()); // Pivot Y at the bottom of the Stick
                 rotate.setAngle(180);
                 stick.getStick().getTransforms().clear();
                 stick.getStick().getTransforms().add(rotate);
@@ -211,14 +207,14 @@ public class Player_create {
                 // Play both the transition and the timeline in parallel
                 playerTransition.play();
                 timeline1.play();
-                String fallSound = "src/main/resources/com/example/stick_hero_final_project/Sounds/dead.wav";
+                String fallSound = "src/Main/resources/com/example/stick_hero_final_project/Sounds/dead.wav";
                 Media sound_button = new Media(new File(fallSound).toURI().toString());
                 MediaPlayer m = new MediaPlayer(sound_button);
                 m.play();
                 // Add an event handler to perform an action after the animation completes
                 playerTransition.setOnFinished(event -> {
                     //newstage.close();
-                    FXMLLoader fxmlLoader = new FXMLLoader(main.class.getResource("Gameover.fxml"));
+                    FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Gameover.fxml"));
                     Scene scene = null;
                     //scoreLabel1.setVisible(false);
 
@@ -274,7 +270,7 @@ public class Player_create {
                 });
 
             } else if (endPointX>=pillar1.getPillar().getX()+pillar1.getPillar().getWidth()/2 && endPointX<=pillar1.getPillar().getX()+pillar1.getPillar().getWidth()/2+5) {
-//                stick_hero controller1  = curr_loader.getController();
+//                StickHero controller1  = curr_loader.getController();
 //
 //                Label scoreLabel1 = controller1.getView();
 //                scoreLabel1.setText("PERFECTION");
@@ -294,7 +290,7 @@ public class Player_create {
                 sth.getView().setTextFill(Color.BLACK);
 //                sth.getView().setVisible(true);
                 Platform.runLater(() -> {
-                    String perectionSound = "src/main/resources/com/example/stick_hero_final_project/Sounds/victory.wav";
+                    String perectionSound = "src/Main/resources/com/example/stick_hero_final_project/Sounds/victory.wav";
                     Media sound_button = new Media(new File(perectionSound).toURI().toString());
                     MediaPlayer m = new MediaPlayer(sound_button);
                     m.play();
@@ -339,7 +335,7 @@ public class Player_create {
             if (check_fall_flag==0) {
                 sth.rem();
                 sth.remcherry();
-//                stick_hero controller1  = curr_loader.getController();
+//                StickHero controller1  = curr_loader.getController();
 //
 //                Label scoreLabel1 = controller1.view;
 //                scoreLabel1.setText("+1");
@@ -366,7 +362,7 @@ public class Player_create {
 //                    player.getNode().setX(0);
 //                    player.getNode().setY(500);
 //                    pillar1Transition.play();
-                //Animation for moving the stick to the left
+                //Animation for moving the Stick to the left
                 TranslateTransition stickTransition = new TranslateTransition(Duration.seconds(0.2), stick.getStick());
                 stickTransition.setByX(-player.getNode().getTranslateX()-2);
 
@@ -515,7 +511,7 @@ public class Player_create {
     public ImageView getNode() {
         return playerImageView;
     }
-    public void playermoveleft(Player_create player){
+    public void playermoveleft(PlayerCreate player){
         player.getNode().setX(0);
         player.getNode().setY(500);
     }
@@ -529,7 +525,7 @@ public class Player_create {
             alert.showAndWait();
         });
     }
-    public boolean boundcheck(ImageView cheery_image,stick_hero sth) throws InterruptedException {
+    public boolean boundcheck(ImageView cheery_image, StickHero sth) throws InterruptedException {
 //        System.out.println("mskmsdsmdskdmsdks");
         if (cheery_image!=null){
             boolean collisionDetected = playerImageView.getBoundsInParent().intersects(cheery_image.getBoundsInParent());
@@ -544,7 +540,7 @@ public class Player_create {
             return collisionDetected;}
         return false;
     }
-    public boolean Rectangle_collison(Pillar q,Pillar p,stick_hero sth){
+    public boolean Rectangle_collison(Pillar q, Pillar p, StickHero sth){
         if (sth.getPostion_face()==1){
             boolean collisonDetected = (playerImageView.getBoundsInParent().intersects(p.getPillar().getBoundsInParent()) || playerImageView.getBoundsInParent().intersects(q.getPillar().getBoundsInParent()));
             return collisonDetected;
@@ -552,7 +548,7 @@ public class Player_create {
         return false;
 
     }
-    public void cherry_set(stick_hero sth){
+    public void cherry_set(StickHero sth){
         Platform.runLater(()->{
             try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("cherry_data.txt"))) {
                 outputStream.writeObject(sth.getCherries());
@@ -562,6 +558,17 @@ public class Player_create {
                 ex.printStackTrace();
             }
         });
+
+    }
+
+    public void back_create() {
+        FileInputStream inputStream1 = null;
+        try {
+            inputStream1 = new FileInputStream("src/Main/resources/com/example/stick_hero_final_project/Images/back1.jpeg");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        Image backgroundImage = new Image(inputStream1);
 
     }
 }

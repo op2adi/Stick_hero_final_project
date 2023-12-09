@@ -19,7 +19,7 @@ import java.io.File;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class stick extends Thread {
+public class Stick extends Thread {
     public double getHt() {
         return ht;
     }
@@ -48,8 +48,8 @@ public class stick extends Thread {
     }
 
     // constructor
-    public stick(double x, double y, double width, double length) {
-        // Initialize the stick with width and length
+    public Stick(double x, double y, double width, double length) {
+        // Initialize the Stick with width and length
         this.length = length;
         this.width = width;
         stick = new Rectangle(width, length, Color.WHITE);
@@ -57,8 +57,8 @@ public class stick extends Thread {
         stick.setY(y - length);  // Adjust the y position based on the length'
         ht = 0;
     }
-    public stick nr(){
-        return new stick(0,0,0,0);
+    public Stick nr(){
+        return new Stick(0,0,0,0);
     }
     public double getLength() {
         return length;
@@ -82,7 +82,7 @@ public class stick extends Thread {
     }
 
     public void extend(double amount) {
-        // Increase the length of the stick and adjust the position
+        // Increase the length of the Stick and adjust the position
 
         stick.setY(stick.getY() - amount);
         stick.setHeight(stick.getHeight() + amount);
@@ -90,18 +90,18 @@ public class stick extends Thread {
     }
 
     public void reset() {
-        // Reset the length of the stick
+        // Reset the length of the Stick
 //        this;
     }
 
-    public void fallHorizontally(stick stick, Player_create player, Pillar pillar, Pane p, Scene newscene, Pillar pillar2, Stage newstage, stick_hero sth, FXMLLoader loadei, ImageView cheery) throws InterruptedException {
+    public void fallHorizontally(Stick stick, PlayerCreate player, Pillar pillar, Pane p, Scene newscene, Pillar pillar2, Stage newstage, StickHero sth, FXMLLoader loadei, ImageView cheery) throws InterruptedException {
         p.setDisable(true);
         AtomicBoolean flag_to_check = new AtomicBoolean(false);
         Duration duration = Duration.seconds(0.1); //
         Rotate rotate = new Rotate();
-        rotate.setPivotX(stick.getStick().getX() + stick.getLength() / 2); // Pivot X at the center of the stick
-        rotate.setPivotY(stick.getStick().getY() + stick.getHt()); // Pivot Y at the bottom of the stick
-        rotate.setAngle(90); // Rotate the stick from top to bottom (90 degrees)
+        rotate.setPivotX(stick.getStick().getX() + stick.getLength() / 2); // Pivot X at the center of the Stick
+        rotate.setPivotY(stick.getStick().getY() + stick.getHt()); // Pivot Y at the bottom of the Stick
+        rotate.setAngle(90); // Rotate the Stick from top to bottom (90 degrees)
 //        CountDownLatch latch = new CountDownLatch(1);
         // imp line piche ke transforms ko remove krega
         stick.getStick().getTransforms().clear();
@@ -114,7 +114,7 @@ public class stick extends Thread {
         );
         timeline.play();
         timeline.setOnFinished(event -> {
-            String Stickfallsound = "src/main/resources/com/example/stick_hero_final_project/Sounds/stick_fallen.wav";
+            String Stickfallsound = "src/Main/resources/com/example/stick_hero_final_project/Sounds/stick_fallen.wav";
             Media stick_fall_sound =  new Media(new File(Stickfallsound).toURI().toString());
             MediaPlayer m = new MediaPlayer(stick_fall_sound);
             m.play();

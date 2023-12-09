@@ -1,10 +1,6 @@
 package com.example.stick_hero_final_project;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -32,7 +28,7 @@ public class HelloController {
     }
 
     public void onPlayButtonClick(MouseEvent MouseEvent) throws IOException {
-        String button_sound  = "src/main/resources/com/example/stick_hero_final_project/Sounds/button.mp3";
+        String button_sound  = "src/Main/resources/com/example/stick_hero_final_project/Sounds/button.mp3";
         Media sound_button = new Media(new File(button_sound).toURI().toString());
         MediaPlayer m = new MediaPlayer(sound_button);
         m.setVolume(1);
@@ -47,7 +43,7 @@ public class HelloController {
 
         // Close the current stage
         stage.close();
-        stick_hero p = new stick_hero(new Player_create(0,0,0,0),10,0,100,30,0,false,true,new Label("HI"));
+        StickHero p = new StickHero(new PlayerCreate(0,0,0,0),10,0,100,30,0,false,true,new Label("HI"),false);
 
         p.back_create();
     }

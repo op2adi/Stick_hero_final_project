@@ -4,7 +4,7 @@ import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Pillar {
+public class Pillar implements PillarDecoratorInterface {
 
     private Rectangle pillar;
     private Rectangle redblock;
@@ -65,4 +65,15 @@ public class Pillar {
         return this.pillar;
     }
 
+    @Override
+    public void onpillar(Pillar p) {
+        p.getPillar().setVisible(true);
+        p.getRedblock().setVisible(true);
+    }
+
+    @Override
+    public void ofpillar(Pillar p) {
+        p.getPillar().setVisible(false);
+        p.getRedblock().setVisible(false);
+    }
 }

@@ -28,7 +28,7 @@
           </execution>
         </executions>
         <configuration>
-          <mainClass>com.example.stick_hero_final_project.main</mainClass>
+          <mainClass>com.example.stick_hero_final_project.Main</mainClass>
           <launcher>app</launcher>
           <jlinkZipName>app</jlinkZipName>
           <jlinkImageName>app</jlinkImageName>
@@ -49,7 +49,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.example.stick_hero_final_project.main</mainClass>
+                  <mainClass>com.example.stick_hero_final_project.Main</mainClass>
                 </transformer>
               </transformers>
             </configuration>

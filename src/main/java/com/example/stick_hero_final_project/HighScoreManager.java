@@ -14,7 +14,7 @@
 //    public static final int GROUND = 300; // The y-coordinate of the ground
 //    public static final int GAP = 100; // The gap between the platforms
 //    public static final int PLATFORM_WIDTH = 50; // The width of each platform
-//    public static final int STICK_SPEED = 10; // The speed of the stick growing and falling
+//    public static final int STICK_SPEED = 10; // The speed of the Stick growing and falling
 //    public static final int HERO_SPEED = 5; // The speed of the hero moving
 //
 //    // Declare some variables
@@ -22,9 +22,9 @@
 //    private Rectangle hero; // The hero shape
 //    private Rectangle platform1; // The first platform shape
 //    private Rectangle platform2; // The second platform shape
-//    private Line stick; // The stick shape
-//    private boolean isGrowing; // Whether the stick is growing or not
-//    private boolean isFalling; // Whether the stick is falling or not
+//    private Line Stick; // The Stick shape
+//    private boolean isGrowing; // Whether the Stick is growing or not
+//    private boolean isFalling; // Whether the Stick is falling or not
 //    private boolean isMoving; // Whether the hero is moving or not
 //
 //    @Override
@@ -34,13 +34,13 @@
 //        hero = new Rectangle(10, 10, 10, 40);
 //        platform1 = new Rectangle(0, GROUND, PLATFORM_WIDTH, HEIGHT - GROUND);
 //        platform2 = new Rectangle(WIDTH - PLATFORM_WIDTH, GROUND, PLATFORM_WIDTH, HEIGHT - GROUND);
-//        stick = new Line(PLATFORM_WIDTH, GROUND, PLATFORM_WIDTH, GROUND);
+//        Stick = new Line(PLATFORM_WIDTH, GROUND, PLATFORM_WIDTH, GROUND);
 //        isGrowing = false;
 //        isFalling = false;
 //        isMoving = false;
 //
 //        // Add the shapes to the root node
-//        root.getChildren().addAll(hero, platform1, platform2, stick);
+//        root.getChildren().addAll(hero, platform1, platform2, Stick);
 //
 //        // Create a scene and set it to the stage
 //        Scene scene = new Scene(root, WIDTH, HEIGHT);
@@ -51,7 +51,7 @@
 //        // Set the scene to handle key events
 //        scene.setOnKeyPressed(e -> {
 //            switch (e.getCode()) {
-//                case SPACE: // If space is pressed, start or stop growing the stick
+//                case SPACE: // If space is pressed, start or stop growing the Stick
 //                    if (!isFalling && !isMoving) {
 //                        isGrowing = !isGrowing;
 //                    }
@@ -72,21 +72,21 @@
 //
 //    // Update the game logic
 //    public void update() {
-//        if (isGrowing) { // If the stick is growing, increase its length and move its end point up
-//            stick.setEndY(stick.getEndY() - STICK_SPEED);
-//        } else if (isFalling) { // If the stick is falling, rotate it around its start point and check if it reaches the ground or the second platform
-//            double angle = Math.toDegrees(Math.atan2(stick.getStartY() - stick.getEndY(), stick.getEndX() - stick.getStartX()));
+//        if (isGrowing) { // If the Stick is growing, increase its length and move its end point up
+//            Stick.setEndY(Stick.getEndY() - STICK_SPEED);
+//        } else if (isFalling) { // If the Stick is falling, rotate it around its start point and check if it reaches the ground or the second platform
+//            double angle = Math.toDegrees(Math.atan2(Stick.getStartY() - Stick.getEndY(), Stick.getEndX() - Stick.getStartX()));
 //            angle += STICK_SPEED;
 //            if (angle >= 90) { // If the angle reaches 90 degrees, stop falling and start moving the hero
 //                angle = 90;
 //                isFalling = false;
 //                isMoving = true;
 //            }
-//            double length = Math.sqrt(Math.pow(stick.getStartX() - stick.getEndX(), 2) + Math.pow(stick.getStartY() - stick.getEndY(), 2));
-//            double endX = stick.getStartX() + length * Math.cos(Math.toRadians(angle));
-//            double endY = stick.getStartY() - length * Math.sin(Math.toRadians(angle));
-//            stick.setEndX(endX);
-//            stick.setEndY(endY);
+//            double length = Math.sqrt(Math.pow(Stick.getStartX() - Stick.getEndX(), 2) + Math.pow(Stick.getStartY() - Stick.getEndY(), 2));
+//            double endX = Stick.getStartX() + length * Math.cos(Math.toRadians(angle));
+//            double endY = Stick.getStartY() - length * Math.sin(Math.toRadians(angle));
+//            Stick.setEndX(endX);
+//            Stick.setEndY(endY);
 //            if (endY >= GROUND) { // If the end point reaches the ground, stop falling and end the game
 //                isFalling = false;
 //                endGame();
@@ -110,15 +110,15 @@
 //        platform2.setX(x);
 //        // Move the hero back to the first platform
 //        hero.setX(10);
-//        // Reset the stick
-//        stick.setStartX(PLATFORM_WIDTH);
-//        stick.setStartY(GROUND);
-//        stick.setEndX(PLATFORM_WIDTH);
-//        stick.setEndY(GROUND);
+//        // Reset the Stick
+//        Stick.setStartX(PLATFORM_WIDTH);
+//        Stick.setStartY(GROUND);
+//        Stick.setEndX(PLATFORM_WIDTH);
+//        Stick.setEndY(GROUND);
 //    }
 //
 //    // Launch the application
-//    public static void main(String[] args) {
+//    public static void Main(String[] args) {
 //        launch(args);
 //    }
 //}

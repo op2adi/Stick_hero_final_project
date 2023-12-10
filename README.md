@@ -16,7 +16,7 @@ Stick Hero is a simple game developed using JavaFX. The objective of the game is
 - Release the `Left-Click` button to stop extending the stick.
 - Time your stick extension to bridge the gap between platforms and land safely.
 - Use `SPACEBAR` to flip the Stick Hero upside down to collect cherries. And hit the `SPACEBAR` again to flip it back.
-- Press the `H` key to make the pillar disappear temporarily.
+- Press the `H` key to make the pillar disappear temporarily then press `H` to make it reappear.
 - Press the `S` key to save the progress.
 #### The game also includes the following functionalities:
 - Score points based on the length of the extended stick and successful landings.
@@ -39,7 +39,6 @@ Stick Hero is a simple game developed using JavaFX. The objective of the game is
     - `sounds`: Store sound files here.
     - Other resources: Contains FXML files and other resources.
 
-## Screenshots
 
 ## Authors
 

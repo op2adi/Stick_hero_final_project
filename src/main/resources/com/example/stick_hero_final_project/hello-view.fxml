@@ -27,15 +27,7 @@
       <Circle fx:id="load" fill="DODGERBLUE" layoutX="226.0" layoutY="538.0" onMousePressed="#Reload" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="372.0" layoutY="538.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="372.0" layoutY="615.0" radius="25.0" stroke="BLACK" strokeType="INSIDE" />
-      <Pane layoutX="208.0" layoutY="604.0">
-         <children>
-            <ImageView fitHeight="32.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@Images/help.png" />
-               </image>
-            </ImageView>
-         </children>
-      </Pane>
+      <Pane layoutX="208.0" layoutY="604.0" />
       <ImageView fx:id="clobutt1" fitHeight="32.0" fitWidth="40.0" layoutX="352.0" layoutY="601.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/close.jpeg" />

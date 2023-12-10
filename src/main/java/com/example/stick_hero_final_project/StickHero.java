@@ -321,6 +321,7 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
         return ahead_pillar;
     }
     private Timeline timeline;
+    private int n_score =0;
     public void setAhead_pillar(Pillar ahead_pillar) {
         this.ahead_pillar = ahead_pillar;
     }
@@ -518,7 +519,7 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
         player.getNode().setTranslateX(0);
 
         backgroundImageView.setFitHeight(700);
-        score_view.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+        score_view.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
 
         ((Pane) root).getChildren().add(backgroundImageView);
         ((Pane) root).getChildren().add(layoutforscore);
@@ -543,7 +544,7 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
         ((Pane) root).getChildren().add(layoutforcherry);
         ((Pane) root).getChildren().add(imageView);
         ((Pane) root).getChildren().add(cherryscore);
-        cherryscore.setStyle("-fx-font-size: 40px; -fx-font-weight: bold;");
+        cherryscore.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
         view.setLayoutY(300);
         view.setText("hu");
 //        view.setVisible(false);
@@ -567,6 +568,7 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
                 view.setText(String.valueOf(0));
             }
         }
+
 //        initialize1((Pane) root);
         // Show the new stage
         ((Pane) root).getChildren().add(player.getNode());
@@ -578,6 +580,54 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
         if (current_pillar!=null){
         current_pillar.onpillar(current_pillar);}
         init();
+        if (load) {
+            try (ObjectInputStream inputStream123 = new ObjectInputStream(new FileInputStream("state_save.txt"))) {
+                System.out.println(load);
+                System.out.println("SAiyam");
+                Integer previousScore = (Integer) inputStream123.readObject();
+                Integer cherr_count = (Integer) inputStream123.readObject();
+                Double currpilx = (Double) inputStream123.readObject();
+                Double curpilwidth = (Double) inputStream123.readObject();
+                Double nextpillx = (Double) inputStream123.readObject();
+                Double nextpillwidth = (Double) inputStream123.readObject();
+
+//            outputStream.writeObject(score);
+//            outputStream.writeObject(cherries);
+//            outputStream.writeObject(current_pillar.getPillar().getX());
+//            outputStream.writeObject(current_pillar.getPillar().getWidth());
+//            outputStream.writeObject(ahead_pillar.getPillar().getX());
+//            outputStream.writeObject(ahead_pillar.getPillar().getWidth());
+                if (previousScore != null && cherr_count != null && currpilx != null && curpilwidth != null && nextpillx != null && nextpillwidth != null) {
+                    n_score = score;
+                    this.score = previousScore;
+                    score_view.setText(String.valueOf(score));
+                    cherries = cherr_count;
+                    System.out.println(score);
+                    if (current_pillar == null){
+                        //Thread.sleep(10);
+                        createmainPillar(((Pane) root));
+                    }
+                    if (ahead_pillar==null){
+                        createRandomPillar(((Pane) root));
+                    }
+                    view.setText(String.valueOf(score));
+                    //current_pillar.getPillar().setTranslateX(currpilx);
+                    current_pillar.getPillar().setWidth(curpilwidth);
+
+                    ahead_pillar.getPillar().setX(nextpillx);
+                    ahead_pillar.getPillar().setWidth(nextpillwidth);
+                    ahead_pillar.getRedblock().setX(ahead_pillar.getPillar().getX() + ahead_pillar.getWidth() / 2);
+                    //highScore = previousScore;
+                    //System.out.println("High score read from file: " + highScore);
+                } else {
+                    System.out.println("Invalid data found in the file.");
+                }
+            } catch (FileNotFoundException e) {
+                //System.out.println("File not found. No high score recorded yet.");
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
     public void rem(){
         if (ahead_pillar!=null && ((Pane) root).getChildren().contains(ahead_pillar.getRedblock())){
@@ -769,48 +819,7 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
 
 
         });
-        if (load) {
-            try (ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream("state_save.txt"))) {
-                System.out.println(load);
-                System.out.println("SAiyam");
-                Integer previousScore = (Integer) inputStream.readObject();
-                Integer cherr_count = (Integer) inputStream.readObject();
-                Double currpilx = (Double) inputStream.readObject();
-                Double curpilwidth = (Double) inputStream.readObject();
-                Double nextpillx = (Double) inputStream.readObject();
-                Double nextpillwidth = (Double) inputStream.readObject();
 
-//            outputStream.writeObject(score);
-//            outputStream.writeObject(cherries);
-//            outputStream.writeObject(current_pillar.getPillar().getX());
-//            outputStream.writeObject(current_pillar.getPillar().getWidth());
-//            outputStream.writeObject(ahead_pillar.getPillar().getX());
-//            outputStream.writeObject(ahead_pillar.getPillar().getWidth());
-                if (previousScore != null && cherr_count != null && currpilx != null && curpilwidth != null && nextpillx != null && nextpillwidth != null) {
-                    score = previousScore;
-                    cherries = cherr_count;
-                    System.out.println(score);
-                    if (current_pillar == null){
-                        //Thread.sleep(10);
-                        createmainPillar(((Pane) root));
-                    }
-                    view.setText(String.valueOf(score));
-                    //current_pillar.getPillar().setTranslateX(currpilx);
-                    current_pillar.getPillar().setWidth(curpilwidth);
-                    ahead_pillar.getPillar().setX(nextpillx);
-                    ahead_pillar.getPillar().setWidth(nextpillwidth);
-                    ahead_pillar.getRedblock().setX(ahead_pillar.getPillar().getX() + ahead_pillar.getWidth() / 2);
-                    //highScore = previousScore;
-                    //System.out.println("High score read from file: " + highScore);
-                } else {
-                    System.out.println("Invalid data found in the file.");
-                }
-            } catch (FileNotFoundException e) {
-                //System.out.println("File not found. No high score recorded yet.");
-            } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
         newScene.setOnKeyPressed(event ->{
             if (event.getCode() == KeyCode.SPACE && !click_flag){
                 if (postion_face==0) {
@@ -922,6 +931,10 @@ public class StickHero extends Thread implements ScoreInterface, Cherries, Point
             if (current_pillar==null) {
                 createmainPillar((Pane) root);
             }
+//            if (n_score!=0){
+//                score=n_score;
+//                score_view.setText(score);
+//            }
 //            createRandomPillar((Pane) root);
             adi_flag=101; // setting this so also not providing any setter function such that by any chance it cant re do and edit this intentionally not providing setter
         }

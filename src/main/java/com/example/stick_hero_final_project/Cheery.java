@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Random;
 
-public class Cheery {
+public class Cheery extends AbstractCheery {
     public Double min(Double a,Double b){
         if (a<b){
             return a;

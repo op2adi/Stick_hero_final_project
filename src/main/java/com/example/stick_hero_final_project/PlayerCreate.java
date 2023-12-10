@@ -115,7 +115,12 @@ public class PlayerCreate{
 // Create a KeyFrame to check the condition every 0.1 second
         KeyFrame conditionCheckFrame = new KeyFrame(Duration.seconds(0.0001), event -> {
             try {
-                boundcheck(cherry,sth);
+                if (boundcheck(cherry,sth)){
+//                    String perectionSound = "src/Main/resources/com/example/stick_hero_final_project/Sounds/victory.wav";
+//                    Media sound_button = new Media(new File(perectionSound).toURI().toString());
+//                    MediaPlayer m = new MediaPlayer(sound_button);
+//                    m.play();
+                };
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -256,7 +261,7 @@ public class PlayerCreate{
                             highScore = 0;
                         }
 
-                        high_score.setText("High Score"+highScore);
+                        high_score.setText("High Score "+highScore);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -534,7 +539,6 @@ public class PlayerCreate{
             if (collisionDetected){
                 sth.inc_cherries();
                 sth.remcherry();
-
 //            System.out.println("halndnskdnadlaskdand");
             }
             return collisionDetected;}
